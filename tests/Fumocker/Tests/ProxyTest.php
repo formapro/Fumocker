@@ -230,10 +230,15 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         $expectedThirdArgument = 'ffooo';
 
         $mock = $this->getMock('stdClass', array('callback'));
-        $mock->expects($this->once())->method('callback')->with(
-            $this->equalTo($expectedFirstArgument),
-            $this->equalTo($expectedSecondArgument),
-            $this->equalTo($expectedThirdArgument));
+        $mock
+            ->expects($this->once())
+            ->method('callback')
+            ->with(
+                $this->equalTo($expectedFirstArgument),
+                $this->equalTo($expectedSecondArgument),
+                $this->equalTo($expectedThirdArgument)
+            )
+        ;
 
         $proxy = new Proxy('str_replace', 'Foo\Bar');
         $proxy->setCallback(array($mock, 'callback'));
