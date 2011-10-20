@@ -10,14 +10,19 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $classReflection = new \ReflectionClass('Fumocker\Registry');
-        $propertyReflection = $classReflection->getProperty('instance');
+        $reflectionClass = new \ReflectionClass('Fumocker\Registry');
+        $reflectionProperty = $reflectionClass->getProperty('instance');
 
-        $propertyReflection->setAccessible(true);
-        $propertyReflection->setValue($classReflection, null);
-        $propertyReflection->setAccessible(false);
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($reflectionClass, null);
+        $reflectionProperty->setAccessible(false);
     }
 
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideInvalidIdentifiers()
     {
         return array(
@@ -33,6 +38,11 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideValidIdentifiers()
     {
         return array(
