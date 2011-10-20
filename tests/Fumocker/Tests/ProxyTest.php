@@ -69,7 +69,7 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
      * @test
      *
      * @expectedException LogicException
-     * @expectedExceptionMessage Namespace is empty. It is not possible create the function in global namespace. There is original one
+     * @expectedExceptionMessage Namespace is empty. It is not possible create the function in global namespace
      */
     public function throwIfNamespaceEmpty()
     {

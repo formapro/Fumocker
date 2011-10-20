@@ -29,7 +29,8 @@ class Proxy
     public function __construct($functionName, $namespace)
     {
         if (false == is_string($functionName)) {
-            throw new \InvalidArgumentException(sprintf('Invalid function name provided. should be string but `%s` provided', gettype($functionName)));
+            throw new \InvalidArgumentException(
+                sprintf('Invalid function name provided. should be string but `%s` provided', gettype($functionName)));
         }
         if (empty($functionName)) {
             throw new \InvalidArgumentException('Function name is empty');
@@ -40,10 +41,12 @@ class Proxy
         $this->functionName = $functionName;
 
         if (false == is_string($namespace)) {
-            throw new \InvalidArgumentException(sprintf('Invalid namespace provided. should be string but `%s` provided', gettype($namespace)));
+            throw new \InvalidArgumentException(sprintf(
+                    'Invalid namespace provided. should be string but `%s` provided', gettype($namespace)));
         }
         if (empty($namespace)) {
-            throw new \LogicException('Namespace is empty. It is not possible create the function in global namespace. There is original one');
+            throw new \LogicException(
+                'Namespace is empty. It is not possible create the function in global namespace. There is original one');
         }
         $this->namespace = $namespace;
     }
