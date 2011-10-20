@@ -51,6 +51,12 @@ class Proxy
         $this->namespace = $namespace;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     * @param $callback
+     *
+     * @return void
+     */
     public function setCallback($callback)
     {
         if (false == is_callable($callback)) {
@@ -60,16 +66,25 @@ class Proxy
         $this->callback = $callback;
     }
 
+    /**
+     * @return mixed
+     */
     public function call()
     {
         return call_user_func_array($this->callback ?: $this->functionName, func_get_args());
     }
 
+    /**
+     * @return string
+     */
     public function getFunctionName()
     {
         return $this->functionName;
     }
 
+    /**
+     * @return string
+     */
     public function getNamespace()
     {
         return $this->namespace;
