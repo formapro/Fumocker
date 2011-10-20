@@ -31,10 +31,10 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         $function = 'is_callable';
 
         return array(
-              array($static_method),
-              array($object_method),
-              array($closure),
-              array($function),
+            array($static_method),
+            array($object_method),
+            array($closure),
+            array($function),
         );
     }
 
