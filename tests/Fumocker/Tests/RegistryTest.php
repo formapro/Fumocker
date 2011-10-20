@@ -18,6 +18,92 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         $propertyReflection->setAccessible(false);
     }
 
+    public static function provideInvalidIdentifiers()
+    {
+        return array(
+            array(null),
+            array(true),
+            array(false),
+            array(new \stdClass()),
+            array(function() {}),
+            array(-10),
+            array(0),
+            array(10),
+            array(1.1),
+        );
+    }
+
+    public static function provideValidIdentifiers()
+    {
+        return array(
+            array('a'),
+            array('a1'),
+            array(''),
+            array('  '),
+        );
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideValidIdentifiers
+     */
+    public function shouldAllowToSetProxyWithIdentifier($validIdentifier)
+    {
+        $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
+
+        $registry = Registry::getInstance();
+
+        $registry->setProxy($validIdentifier, $proxy);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideInvalidIdentifiers
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid identifier provided, Should be not empty string
+     */
+    public function throwIfInvalidIdentifierProvidedWhileSettingAProxy($invalidIdentifier)
+    {
+        $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
+
+        $registry = Registry::getInstance();
+
+        $registry->setProxy($invalidIdentifier, $proxy);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowToGetProxyByIdentifier()
+    {
+        $identifier = 'an_id';
+        $expectedProxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
+
+        $registry = Registry::getInstance();
+
+        $registry->setProxy($identifier, $expectedProxy);
+
+        $actualProxy = $registry->getProxy($identifier);
+
+        $this->assertSame($expectedProxy, $actualProxy);
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMesssage Invalid identifier `not_set_proxy` given. Cannot find a proxy related to it.
+     */
+    public function throwIfProxyWithGivenIdentifierNotExistInRegistry()
+    {
+        $registry = Registry::getInstance();
+
+        $registry->getProxy('not_set_proxy');
+    }
+
     /**
      * @test
      */
