@@ -92,19 +92,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @test
-     *
-     * @expectedException LogicException
-     * @expectedExceptionMessage Function `foo` does not exist
-     */
-    public function throwIfNotExistFunctionProvided()
-    {
-        new Proxy('foo', 'Foo\Bar');
-    }
-
-
-    /**
-     *
-     * @test
      */
     public function shouldAllowToGetFunctionNameSetInConstructor()
     {
@@ -126,6 +113,20 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         $proxy = new Proxy('str_replace', $expectedNamespace);
 
         $this->assertEquals($expectedNamespace, $proxy->getNamespace());
+    }
+
+    /**
+     *
+     * @test
+     *
+     * @expectedException BadFunctionCallException
+     * @expectedExceptionMessage The function `not_exist_function` is not exist in global namespace
+     */
+    public function throwOnCallIfOriginalFunctionNotExistAndCallbackNotSet()
+    {
+        $proxy = new Proxy('not_exist_function', 'Foo\Bar');
+
+        $proxy->call();
     }
 
     /**

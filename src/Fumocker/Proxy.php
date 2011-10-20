@@ -36,9 +36,7 @@ class Proxy
         if (empty($functionName)) {
             throw new \InvalidArgumentException('Function name is empty');
         }
-        if (false == \function_exists($functionName)) {
-            throw new \LogicException(sprintf('Function `%s` does not exist', $functionName));
-        }
+
         $this->functionName = $functionName;
 
         if (false == is_string($namespace)) {
@@ -73,7 +71,15 @@ class Proxy
      */
     public function call()
     {
-        return call_user_func_array($this->callback ?: $this->functionName, func_get_args());
+        if ($this->callback) {
+            return \call_user_func_array($this->callback, func_get_args());
+        }
+
+        if (false == \function_exists($this->functionName)) {
+            throw new \BadFunctionCallException(sprintf('The function `%s` is not exist in global namespace', $this->functionName));
+        }
+
+        return call_user_func_array($this->functionName, func_get_args());
     }
 
     /**
