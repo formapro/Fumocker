@@ -16,6 +16,9 @@ class Proxy
      */
     protected $namespace;
 
+    /**
+     * @var Callable
+     */
     protected $callback;
 
     /**
