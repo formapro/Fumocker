@@ -23,6 +23,36 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public static function provideValidCallbacks()
+    {
+        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
+        $object_method = array(new StubMethodCall(), 'objectMethod');
+        $closure = function() {};
+        $function = 'is_callable';
+
+        return array(
+              array($static_method),
+              array($object_method),
+              array($closure),
+              array($function),
+        );
+    }
+
+    public static function provideNoCallableItems()
+    {
+        return array(
+            array('string'),
+            array(1),
+            array(12.2),
+            array(array()),
+            array(false),
+            array(null),
+            array(new \stdClass()),
+            array(array(new \stdClass(), 'no_exist_method')),
+            array(array('stdClass', 'no_exist_method')),
+        );
+    }
+
 
     /**
      *
@@ -145,26 +175,30 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     /**
      *
      * @test
+     *
+     * @dataProvider provideValidCallbacks
      */
-    public function shouldAllowToSetCustomFunctionCallback()
+    public function shouldAllowToSetCustomCallback($validCallback)
     {
         $proxy = new Proxy('str_replace', 'Foo\Bar');
 
-        $proxy->setCallback(function() {});
+        $proxy->setCallback($validCallback);
     }
 
     /**
      *
      * @test
      *
+     * @dataProvider provideNoCallableItems
+     *
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid callback provided
      */
-    public function throwIfInvalidCallbackProvided()
+    public function throwIfInvalidCallbackProvided($invalidCallback)
     {
         $proxy = new Proxy('str_replace', 'Foo\Bar');
 
-        $proxy->setCallback('invalid-callback');
+        $proxy->setCallback($invalidCallback);
     }
 
     /**
@@ -224,4 +258,11 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedResult, $actualResult);
     }
+}
+
+class StubMethodCall
+{
+  public static function staticMethod() {}
+
+  public function objectMethod() {}
 }
