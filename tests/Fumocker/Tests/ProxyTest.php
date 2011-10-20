@@ -15,6 +15,15 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public static function provideEmpties()
+    {
+        return array(
+            array(''),
+            array('  '),
+        );
+    }
+
+
     /**
      *
      * @test
@@ -42,12 +51,14 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
      *
      * @test
      *
+     * @dataProvider provideEmpties
+     *
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Function name is empty
      */
-    public function throwInvalidIfFunctionNameEmpty()
+    public function throwInvalidIfFunctionNameEmpty($emptyFunctionName)
     {
-        new Proxy('', 'Foo\Bar');
+        new Proxy($emptyFunctionName, 'Foo\Bar');
     }
 
     /**
@@ -68,12 +79,14 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
      *
      * @test
      *
+     * @dataProvider provideEmpties
+     *
      * @expectedException LogicException
      * @expectedExceptionMessage Namespace is empty. It is not possible create the function in global namespace
      */
-    public function throwIfNamespaceEmpty()
+    public function throwIfNamespaceEmpty($emptyNamespace)
     {
-        new Proxy('str_replace', '');
+        new Proxy('str_replace', $emptyNamespace);
     }
 
     /**

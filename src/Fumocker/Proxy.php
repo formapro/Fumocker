@@ -32,6 +32,7 @@ class Proxy
             throw new \InvalidArgumentException(
                 sprintf('Invalid function name provided. should be string but `%s` provided', gettype($functionName)));
         }
+        $functionName = trim($functionName);
         if (empty($functionName)) {
             throw new \InvalidArgumentException('Function name is empty');
         }
@@ -44,6 +45,7 @@ class Proxy
             throw new \InvalidArgumentException(sprintf(
                     'Invalid namespace provided. should be string but `%s` provided', gettype($namespace)));
         }
+        $namespace = trim($namespace);
         if (empty($namespace)) {
             throw new \LogicException(
                 'Namespace is empty. It is not possible create the function in global namespace. There is original one');
