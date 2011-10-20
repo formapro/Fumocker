@@ -1,17 +1,14 @@
 <?php
-
 namespace Fumocker;
 
 class Proxy
 {
     /**
-     *
      * @var string
      */
     protected $functionName;
 
     /**
-     *
      * @var string
      */
     protected $namespace;
@@ -22,7 +19,6 @@ class Proxy
     protected $callback;
 
     /**
-     *
      * @param string $functionName
      * @param string $namespace
      */
@@ -32,6 +28,13 @@ class Proxy
         $this->setNamespace($namespace);
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     *
+     * @param string $functionName
+     *
+     * @return void
+     */
     protected function setFunctionName($functionName)
     {
         if (false == \is_string($functionName)) {
@@ -46,6 +49,13 @@ class Proxy
         $this->functionName = $functionName;
     }
 
+    /**
+     * @throws \InvalidArgumentException|\LogicException
+     *
+     * @param string $namespace
+     *
+     * @return void
+     */
     protected function setNamespace($namespace)
     {
         if (false == \is_string($namespace)) {
@@ -63,6 +73,7 @@ class Proxy
 
     /**
      * @throws \InvalidArgumentException
+     *
      * @param $callback
      *
      * @return void

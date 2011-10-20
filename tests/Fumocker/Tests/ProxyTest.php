@@ -5,6 +5,11 @@ use Fumocker\Proxy;
 
 class ProxyTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideNotStringTypes()
     {
         return array(
@@ -15,6 +20,11 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideEmpties()
     {
         return array(
@@ -23,6 +33,11 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideValidCallbacks()
     {
         $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
@@ -38,6 +53,11 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @static
+     *
+     * @return array
+     */
     public static function provideNoCallableItems()
     {
         return array(
@@ -55,7 +75,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     *
      * @test
      */
     public function shouldTakeNamespaceAndFunctionNameInConstructor()
@@ -64,7 +83,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideNotStringTypes
@@ -78,7 +96,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideEmpties
@@ -92,7 +109,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideNotStringTypes
@@ -106,7 +122,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideEmpties
@@ -120,7 +135,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldAllowToGetFunctionNameSetInConstructor()
@@ -133,7 +147,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldAllowToGetNamespaceSetInConstructor()
@@ -146,7 +159,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @expectedException BadFunctionCallException
@@ -160,7 +172,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldCallOriginalIfCallbackIsNotSet()
@@ -173,7 +184,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideValidCallbacks
@@ -186,7 +196,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      *
      * @dataProvider provideNoCallableItems
@@ -202,7 +211,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldProxyCallToCallbackIfDefined()
@@ -220,7 +228,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldProxyCallToCallbackWithProvidedArguments()
@@ -247,7 +254,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldCallToCallbackAndProxyItsReturn()
