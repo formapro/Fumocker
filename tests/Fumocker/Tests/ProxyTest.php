@@ -133,7 +133,7 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
      *
      * @test
      */
-    public function shouldCallOriginalFunction()
+    public function shouldCallOriginalIfCallbackIsNotSet()
     {
         $proxy = new Proxy('str_replace', 'Foo\Bar');
 
