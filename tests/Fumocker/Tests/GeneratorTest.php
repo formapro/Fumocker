@@ -61,7 +61,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldGenerateMockedFunction()
     {
         //guard
-        $this->assertFunctionNotExists('test_generate_function_mock');
+        $this->assertFunctionNotExists('test_generate_function_mock', __NAMESPACE__);
 
         $proxy = new Proxy('test_generate_function_mock', __NAMESPACE__);
 
@@ -69,7 +69,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator->generate($proxy);
 
-        $this->assertFunctionExists('test_generate_function_mock');
+        $this->assertFunctionExists('test_generate_function_mock', __NAMESPACE__);
         $this->assertTrue($generator->isMocked($proxy));
     }
 
@@ -79,8 +79,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnUniqueIdentifierAssignedForMockedFunction()
     {
         //guard
-        $this->assertFunctionNotExists('test_unique_identifier_one');
-        $this->assertFunctionNotExists('test_unique_identifier_two');
+        $this->assertFunctionNotExists('test_unique_identifier_one', __NAMESPACE__);
+        $this->assertFunctionNotExists('test_unique_identifier_two', __NAMESPACE__);
 
         $proxyOne = new Proxy('test_unique_identifier_one', __NAMESPACE__);
         $proxyTwo = new Proxy('test_unique_identifier_two', __NAMESPACE__);
@@ -105,7 +105,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldSetIdentifierToMockedFunctionConstantWhileGeneratingAMock()
     {
         //guard
-        $this->assertFunctionNotExists('test_set_identifier');
+        $this->assertFunctionNotExists('test_set_identifier', __NAMESPACE__);
 
         $proxy = new Proxy('test_set_identifier', __NAMESPACE__);
         $proxy->setCallback(function() {});
@@ -127,7 +127,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldRedirectMockedFunctionCallToAProxy()
     {
         //guard
-        $this->assertFunctionNotExists('test_redirect_call_to_proxy');
+        $this->assertFunctionNotExists('test_redirect_call_to_proxy', __NAMESPACE__);
 
         $proxy = $this->getMock(
             'Fumocker\Proxy', array('call'), array('test_redirect_call_to_proxy', __NAMESPACE__));
@@ -141,7 +141,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $identifier = $generator->generate($proxy);
         Registry::getInstance()->setProxy($identifier, $proxy);
 
-        $this->assertFunctionExists('test_redirect_call_to_proxy');
+        $this->assertFunctionExists('test_redirect_call_to_proxy', __NAMESPACE__);
 
         test_redirect_call_to_proxy();
     }
@@ -152,7 +152,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldProxyMockedFunctionArgumentsToAProxy()
     {
         //guard
-        $this->assertFunctionNotExists('test_proxy_arguments_proxy');
+        $this->assertFunctionNotExists('test_proxy_arguments_proxy', __NAMESPACE__);
 
         $expectedFirstArgument = 'foo';
         $expectedSecondArgument = array('bar');
@@ -177,7 +177,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $identifier = $generator->generate($proxy);
         Registry::getInstance()->setProxy($identifier, $proxy);
 
-        $this->assertFunctionExists('test_proxy_arguments_proxy');
+        $this->assertFunctionExists('test_proxy_arguments_proxy', __NAMESPACE__);
 
         test_proxy_arguments_proxy($expectedFirstArgument, $expectedSecondArgument, $expectedThirdArgument);
     }
@@ -188,7 +188,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnProxyResultAsMockedFunction()
     {
         //guard
-        $this->assertFunctionNotExists('test_return_proxy_result');
+        $this->assertFunctionNotExists('test_return_proxy_result', __NAMESPACE__);
 
         $proxy = $this->getMock(
             'Fumocker\Proxy', array('call'), array('test_return_proxy_result', __NAMESPACE__));
@@ -206,19 +206,19 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $identifier = $generator->generate($proxy);
         Registry::getInstance()->setProxy($identifier, $proxy);
 
-        $this->assertFunctionExists('test_return_proxy_result');
+        $this->assertFunctionExists('test_return_proxy_result', __NAMESPACE__);
 
         $this->assertEquals($excpectedResult, test_return_proxy_result());
     }
 
-    public function assertFunctionExists($functionName)
+    public function assertFunctionExists($functionName, $namesppace)
     {
-        $this->assertTrue(function_exists(__NAMESPACE__ . '\\' . $functionName));
+        $this->assertTrue(function_exists($namesppace . '\\' . $functionName));
     }
 
-    public function assertFunctionNotExists($functionName)
+    public function assertFunctionNotExists($functionName, $namesppace)
     {
-        $this->assertFalse(function_exists(__NAMESPACE__ . '\\' . $functionName));
+        $this->assertFalse(function_exists($namesppace . '\\' . $functionName));
     }
 }
 
