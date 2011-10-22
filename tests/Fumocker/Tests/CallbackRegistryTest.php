@@ -55,17 +55,66 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideValidCallbacks()
+    {
+        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
+        $object_method = array(new StubMethodCall(), 'objectMethod');
+        $closure = function() {};
+        $function = 'is_callable';
+
+        return array(
+            array($static_method),
+            array($object_method),
+            array($closure),
+            array($function),
+        );
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideNoCallableItems()
+    {
+        return array(
+            array('string'),
+            array(1),
+            array(12.2),
+            array(array()),
+            array(false),
+            array(null),
+            array(new \stdClass()),
+            array(array(new \stdClass(), 'no_exist_method')),
+            array(array('stdClass', 'no_exist_method')),
+        );
+    }
+
+    /**
      * @test
      *
-     * @dataProvider provideValidIdentifiers
+     * @dataProvider provideValidCallbacks
      */
-    public function shouldAllowToSetProxyWithIdentifier($validIdentifier)
+    public function shouldAllowToSetCallable($validCallable)
     {
-        $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
+        CallbackRegistry::getInstance()->set('an_id', $validCallable);
+    }
 
-        $registry = CallbackRegistry::getInstance();
-
-        $registry->set($validIdentifier, $proxy);
+    /**
+     * @test
+     *
+     * @dataProvider provideNoCallableItems
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid callable provided
+     */
+    public function throwWhenSetInvalidCallable($invalidCallable)
+    {
+        CallbackRegistry::getInstance()->set('an_id', $invalidCallable);
     }
 
     /**
@@ -76,13 +125,11 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid identifier provided, Should be not empty string
      */
-    public function throwIfInvalidIdentifierProvidedWhileSettingAProxy($invalidIdentifier)
+    public function throwWhenSetCallableWithInvalidIdentifier($invalidIdentifier)
     {
-        $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
-
         $registry = CallbackRegistry::getInstance();
 
-        $registry->set($invalidIdentifier, $proxy);
+        $registry->set($invalidIdentifier, function(){});
     }
 
     /**
@@ -93,12 +140,8 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
         $identifier = 'an_id';
         $expectedCallable = function(){};
 
-        $proxy = new Proxy('foo', 'bar');
-        $proxy->setCallback($expectedCallable);
-
         $registry = CallbackRegistry::getInstance();
-
-        $registry->set($identifier, $proxy);
+        $registry->set($identifier, $expectedCallable);
 
         $actualCallable = $registry->get($identifier);
 
@@ -109,13 +152,13 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      * @test
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMesssage Invalid identifier `not_set_proxy` given. Cannot find a proxy related to it.
+     * @expectedExceptionMessage Invalid identifier `not_set_callable` given. Cannot find a callable related to it.
      */
-    public function throwIfProxyWithGivenIdentifierNotExistInRegistry()
+    public function throwWhenGetCallableNotSetBefore()
     {
         $registry = CallbackRegistry::getInstance();
 
-        $registry->get('not_set_proxy');
+        $registry->get('not_set_callable');
     }
 
     /**
@@ -162,4 +205,11 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($registryOne, $registryTwo);
     }
+}
+
+class StubMethodCall
+{
+  public static function staticMethod() {}
+
+  public function objectMethod() {}
 }

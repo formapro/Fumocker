@@ -124,7 +124,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldRedirectMockedFunctionCallToAProxy()
+    public function shouldRedirectMockedFunctionCallToAssignedCallable()
     {
         //guard
         $this->assertFunctionNotExists('test_redirect_call_to_proxy', __NAMESPACE__);
@@ -136,12 +136,11 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         ;
 
         $proxy = new Proxy('test_redirect_call_to_proxy', __NAMESPACE__);
-        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->set($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
 
         $this->assertFunctionExists('test_redirect_call_to_proxy', __NAMESPACE__);
 
@@ -172,12 +171,11 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         ;
 
         $proxy = new Proxy('test_proxy_arguments_proxy', __NAMESPACE__);
-        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->set($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
 
         $this->assertFunctionExists('test_proxy_arguments_proxy', __NAMESPACE__);
 
@@ -202,12 +200,11 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         ;
 
         $proxy = new Proxy('test_return_proxy_result', __NAMESPACE__);
-        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->set($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
 
         $this->assertFunctionExists('test_return_proxy_result', __NAMESPACE__);
 

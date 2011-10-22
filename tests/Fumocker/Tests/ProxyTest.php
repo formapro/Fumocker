@@ -40,8 +40,8 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
      */
     public static function provideValidCallbacks()
     {
-        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
-        $object_method = array(new StubMethodCall(), 'objectMethod');
+        $static_method = array(__NAMESPACE__.'\StubMethodCallDeprecated', 'staticMethod');
+        $object_method = array(new StubMethodCallDeprecated(), 'objectMethod');
         $closure = function() {};
         $function = 'is_callable';
 
@@ -271,7 +271,7 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class StubMethodCall
+class StubMethodCallDeprecated
 {
   public static function staticMethod() {}
 

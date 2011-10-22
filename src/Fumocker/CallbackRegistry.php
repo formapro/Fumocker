@@ -9,14 +9,14 @@ class CallbackRegistry
      */
     protected static $instance;
 
-    protected $proxies;
-
     /**
-     *
+     * @var array
      */
+    protected $callables;
+
     protected function __construct()
     {
-        $this->proxies = array();
+        $this->callables = array();
     }
 
     /**
@@ -29,23 +29,27 @@ class CallbackRegistry
 
     /**
      * @throws \InvalidArgumentException if identifier is not valid
+     * @throws \InvalidArgumentException if invalid callable provided
      *
      * @param string $identifier
-     * @param Proxy $proxy
+     * @param Callable $callable
      *
      * @return void
      */
-    public function set($identifier, Proxy $proxy)
+    public function set($identifier, $callable)
     {
         if (false == is_string($identifier)) {
             throw new \InvalidArgumentException('Invalid identifier provided, Should be not empty string');
         }
+        if (false == \is_callable($callable)) {
+            throw new \InvalidArgumentException('Invalid callable provided');
+        }
 
-        $this->proxies[$identifier] = $proxy;
+        $this->callables[$identifier] = $callable;
     }
 
     /**
-     * @throws \InvalidArgumentException if proxy for a given does not exist
+     * @throws \InvalidArgumentException if callable for a given does not exist
      *
      * @param $identifier
      *
@@ -53,18 +57,16 @@ class CallbackRegistry
      */
     public function get($identifier)
     {
-        if (false == isset($this->proxies[$identifier])) {
+        if (false == isset($this->callables[$identifier])) {
             throw new \InvalidArgumentException(
-                \sprintf('Invalid identifier `%s` given. Cannot find a proxy related to it.', $identifier));
+                \sprintf('Invalid identifier `%s` given. Cannot find a callable related to it.', $identifier));
         }
 
-        return $this->proxies[$identifier]->getCallback();
+        return $this->callables[$identifier];
     }
 
     /**
      * @static
-     *
-     * @throws \RuntimeException
      *
      * @return CallbackRegistry
      */
