@@ -4,7 +4,8 @@ namespace Fumocker;
 class Generator
 {
     /**
-     * @throws \LogicException
+     * @throws \LogicException if the function has already been created by a user in the given namespace
+     * @throws \LogicException if the function has already been mocked in the given namespace
      *
      * @param Proxy $proxy
      *
