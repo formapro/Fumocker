@@ -1,7 +1,7 @@
 <?php
 namespace Fumocker;
 
-class Generator
+class MockGenerator
 {
     /**
      * @throws \LogicException if the function has already been created by a user in the given namespace
