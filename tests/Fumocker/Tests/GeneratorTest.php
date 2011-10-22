@@ -112,11 +112,13 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new Generator();
 
-        $generator->generate($proxy);
+        $expectedIdentifier = $generator->generate($proxy);
 
         $mockedFunctionConstant = __NAMESPACE__ . '\\' . '__FUMOCKER_TEST_SET_IDENTIFIER';
         $this->assertTrue(defined($mockedFunctionConstant));
-        $this->assertEquals(spl_object_hash($proxy), constant($mockedFunctionConstant));
+
+        $actualIdentifier = constant($mockedFunctionConstant);
+        $this->assertEquals($expectedIdentifier, $actualIdentifier);
     }
 
     /**
