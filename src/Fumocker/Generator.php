@@ -11,11 +11,8 @@ class Generator
      *
      * @return void
      */
-    public function generate(Proxy $proxy)
+    public function generate($functionName, $namespace)
     {
-        $functionName = $proxy->getFunctionName();
-        $namespace = $proxy->getNamespace();
-
         if (\function_exists("$namespace\\$functionName") && false == $this->isMocked($functionName, $namespace)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has already been defined by a user',
@@ -31,15 +28,16 @@ class Generator
             ));
         }
 
-        $identifier = spl_object_hash($proxy);
+        $constantName = $this->generateConstant($functionName);
+        $identifier = "$namespace\\$functionName";
 
         $code =
 "
-namespace {$proxy->getNamespace()};
+namespace {$namespace};
 
-const {$this->generateConstant($proxy->getFunctionName())} = '{$identifier}';
+const {$constantName} = '{$identifier}';
 
-function {$proxy->getFunctionName()}()
+function {$functionName}()
 {
     \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$identifier}');
 

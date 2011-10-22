@@ -2,7 +2,6 @@
 namespace Fumocker\Tests;
 
 use Fumocker\CallbackRegistry;
-use Fumocker\Proxy;
 
 class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 {
