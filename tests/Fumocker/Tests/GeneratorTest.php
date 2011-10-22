@@ -139,7 +139,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->setProxy($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $proxy);
 
         $this->assertFunctionExists('test_redirect_call_to_proxy', __NAMESPACE__);
 
@@ -175,7 +175,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->setProxy($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $proxy);
 
         $this->assertFunctionExists('test_proxy_arguments_proxy', __NAMESPACE__);
 
@@ -204,7 +204,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new Generator();
 
         $identifier = $generator->generate($proxy);
-        CallbackRegistry::getInstance()->setProxy($identifier, $proxy);
+        CallbackRegistry::getInstance()->set($identifier, $proxy);
 
         $this->assertFunctionExists('test_return_proxy_result', __NAMESPACE__);
 

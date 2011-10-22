@@ -64,7 +64,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 
         $registry = CallbackRegistry::getInstance();
 
-        $registry->setProxy($validIdentifier, $proxy);
+        $registry->set($validIdentifier, $proxy);
     }
 
     /**
@@ -81,7 +81,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 
         $registry = CallbackRegistry::getInstance();
 
-        $registry->setProxy($invalidIdentifier, $proxy);
+        $registry->set($invalidIdentifier, $proxy);
     }
 
     /**
@@ -94,7 +94,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 
         $registry = CallbackRegistry::getInstance();
 
-        $registry->setProxy($identifier, $expectedProxy);
+        $registry->set($identifier, $expectedProxy);
 
         $actualProxy = $registry->get($identifier);
 

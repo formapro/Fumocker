@@ -35,7 +35,7 @@ class CallbackRegistry
      *
      * @return void
      */
-    public function setProxy($identifier, Proxy $proxy)
+    public function set($identifier, Proxy $proxy)
     {
         if (false == is_string($identifier)) {
             throw new \InvalidArgumentException('Invalid identifier provided, Should be not empty string');
