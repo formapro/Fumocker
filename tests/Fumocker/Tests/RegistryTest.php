@@ -1,16 +1,16 @@
 <?php
 namespace Fumocker\Tests;
 
-use Fumocker\Registry;
+use Fumocker\CallbackRegistry;
 
-class RegistryTest extends \PHPUnit_Framework_TestCase
+class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return void
      */
     public function setUp()
     {
-        $reflectionClass = new \ReflectionClass('Fumocker\Registry');
+        $reflectionClass = new \ReflectionClass('Fumocker\CallbackRegistry');
         $reflectionProperty = $reflectionClass->getProperty('instance');
 
         $reflectionProperty->setAccessible(true);
@@ -62,7 +62,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
     {
         $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
 
-        $registry = Registry::getInstance();
+        $registry = CallbackRegistry::getInstance();
 
         $registry->setProxy($validIdentifier, $proxy);
     }
@@ -79,7 +79,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
     {
         $proxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
 
-        $registry = Registry::getInstance();
+        $registry = CallbackRegistry::getInstance();
 
         $registry->setProxy($invalidIdentifier, $proxy);
     }
@@ -92,7 +92,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         $identifier = 'an_id';
         $expectedProxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
 
-        $registry = Registry::getInstance();
+        $registry = CallbackRegistry::getInstance();
 
         $registry->setProxy($identifier, $expectedProxy);
 
@@ -109,7 +109,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function throwIfProxyWithGivenIdentifierNotExistInRegistry()
     {
-        $registry = Registry::getInstance();
+        $registry = CallbackRegistry::getInstance();
 
         $registry->getProxy('not_set_proxy');
     }
@@ -119,7 +119,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotAllowToInstantiateViaConstructor()
     {
-        $reflectionClass = new \ReflectionClass('Fumocker\Registry');
+        $reflectionClass = new \ReflectionClass('Fumocker\CallbackRegistry');
 
         $reflectionConstructor = $reflectionClass->getConstructor();
         $this->assertInstanceOf('ReflectionMethod', $reflectionConstructor, 'Constructor method should be defined in the class');
@@ -131,7 +131,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldNotAllowToClone()
     {
-        $reflectionClass = new \ReflectionClass('Fumocker\Registry');
+        $reflectionClass = new \ReflectionClass('Fumocker\CallbackRegistry');
 
         $reflectionClone = $reflectionClass->getMethod('__clone');
         $this->assertInstanceOf('ReflectionMethod', $reflectionClone, 'Clone method should be defined in the class');
@@ -143,9 +143,9 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowToGetSingletonInstanceOfRegistry()
     {
-        $registry = Registry::getInstance();
+        $registry = CallbackRegistry::getInstance();
 
-        $this->assertInstanceOf('Fumocker\Registry', $registry);
+        $this->assertInstanceOf('Fumocker\CallbackRegistry', $registry);
     }
 
     /**
@@ -153,8 +153,8 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAlwaysReturnTheSameInstance()
     {
-        $registryOne = Registry::getInstance();
-        $registryTwo = Registry::getInstance();
+        $registryOne = CallbackRegistry::getInstance();
+        $registryTwo = CallbackRegistry::getInstance();
 
         $this->assertSame($registryOne, $registryTwo);
     }

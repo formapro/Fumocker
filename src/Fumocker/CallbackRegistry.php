@@ -2,10 +2,10 @@
 
 namespace Fumocker;
 
-class Registry
+class CallbackRegistry
 {
     /**
-     * @var Registry
+     * @var CallbackRegistry
      */
     protected static $instance;
 
@@ -66,7 +66,7 @@ class Registry
      *
      * @throws \RuntimeException
      *
-     * @return Registry
+     * @return CallbackRegistry
      */
     public static function getInstance()
     {

@@ -30,13 +30,13 @@ class Generator
 "
 namespace {$proxy->getNamespace()};
 
-use Fumocker\Registry as FumockerRegistry;
+use Fumocker\CallbackRegistry as FumockerCallbackRegistry;
 
 const {$this->generateConstant($proxy)} = '{$identifier}';
 
 function {$proxy->getFunctionName()}()
 {
-    \$proxy = FumockerRegistry::getInstance()->getProxy('{$identifier}');
+    \$proxy = FumockerCallbackRegistry::getInstance()->getProxy('{$identifier}');
 
     return \\call_user_func_array(array(\$proxy, 'call'), \\func_get_args());
 }
