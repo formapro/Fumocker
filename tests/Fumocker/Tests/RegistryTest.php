@@ -96,7 +96,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 
         $registry->setProxy($identifier, $expectedProxy);
 
-        $actualProxy = $registry->getProxy($identifier);
+        $actualProxy = $registry->get($identifier);
 
         $this->assertSame($expectedProxy, $actualProxy);
     }
@@ -111,7 +111,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
     {
         $registry = CallbackRegistry::getInstance();
 
-        $registry->getProxy('not_set_proxy');
+        $registry->get('not_set_proxy');
     }
 
     /**

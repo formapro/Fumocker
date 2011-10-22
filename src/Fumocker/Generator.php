@@ -36,7 +36,7 @@ const {$this->generateConstant($proxy)} = '{$identifier}';
 
 function {$proxy->getFunctionName()}()
 {
-    \$proxy = FumockerCallbackRegistry::getInstance()->getProxy('{$identifier}');
+    \$proxy = FumockerCallbackRegistry::getInstance()->get('{$identifier}');
 
     return \\call_user_func_array(array(\$proxy, 'call'), \\func_get_args());
 }

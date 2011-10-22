@@ -51,7 +51,7 @@ class CallbackRegistry
      *
      * @return Proxy
      */
-    public function getProxy($identifier)
+    public function get($identifier)
     {
         if (false == isset($this->proxies[$identifier])) {
             throw new \InvalidArgumentException(
