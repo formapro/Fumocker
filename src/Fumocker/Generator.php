@@ -30,13 +30,11 @@ class Generator
 "
 namespace {$proxy->getNamespace()};
 
-use Fumocker\CallbackRegistry as FumockerCallbackRegistry;
-
-const {$this->generateConstant($proxy)} = '{$identifier}';
+const {$this->generateConstant($proxy->getFunctionName())} = '{$identifier}';
 
 function {$proxy->getFunctionName()}()
 {
-    \$callable = FumockerCallbackRegistry::getInstance()->get('{$identifier}');
+    \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$identifier}');
 
     return \\call_user_func_array(\$callable, \\func_get_args());
 }
@@ -53,7 +51,7 @@ function {$proxy->getFunctionName()}()
      */
     public function isMocked(Proxy $proxy)
     {
-        return defined($proxy->getNamespace(). '\\' . $this->generateConstant($proxy));
+        return defined($proxy->getNamespace(). '\\' . $this->generateConstant($proxy->getFunctionName()));
     }
 
     /**
@@ -61,8 +59,8 @@ function {$proxy->getFunctionName()}()
      *
      * @return string
      */
-    protected function generateConstant(Proxy $proxy)
+    protected function generateConstant($functionName)
     {
-        return '__FUMOCKER_'.strtoupper($proxy->getFunctionName());
+        return '__FUMOCKER_'.strtoupper($functionName);
     }
 }
