@@ -48,7 +48,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      * @expectedException LogicException
      * @expectedExceptionMessage The function `mocked_function` in the namespace `Fumocker\Tests` has been already mocked
      */
-    public function throwIfMockedFunctionAlreadyExistInTheNamespace()
+    public function throwIfMockedFunctionAlreadyGeneratedInTheNamespace()
     {
         $generator = new Generator();
 
