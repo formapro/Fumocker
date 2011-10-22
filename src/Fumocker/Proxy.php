@@ -72,6 +72,16 @@ class Proxy
     }
 
     /**
+     * The method added to allow easy refactoring and should be removed after the refactoring finished.
+     *
+     * @return Callable
+     */
+    public function getCallback()
+    {
+        return $this->callback;
+    }
+
+    /**
      * @throws \InvalidArgumentException
      *
      * @param $callback

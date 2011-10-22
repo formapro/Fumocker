@@ -49,7 +49,7 @@ class CallbackRegistry
      *
      * @param $identifier
      *
-     * @return Proxy
+     * @return Callable
      */
     public function get($identifier)
     {
@@ -58,7 +58,7 @@ class CallbackRegistry
                 \sprintf('Invalid identifier `%s` given. Cannot find a proxy related to it.', $identifier));
         }
 
-        return $this->proxies[$identifier];
+        return $this->proxies[$identifier]->getCallback();
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Fumocker\Tests;
 
 use Fumocker\CallbackRegistry;
+use Fumocker\Proxy;
 
 class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
 {
@@ -87,18 +88,21 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldAllowToGetProxyByIdentifier()
+    public function shouldAllowToGetCallableByIdentifier()
     {
         $identifier = 'an_id';
-        $expectedProxy = $this->getMock('Fumocker\\Proxy', array(), array(), '', false);
+        $expectedCallable = function(){};
+
+        $proxy = new Proxy('foo', 'bar');
+        $proxy->setCallback($expectedCallable);
 
         $registry = CallbackRegistry::getInstance();
 
-        $registry->set($identifier, $expectedProxy);
+        $registry->set($identifier, $proxy);
 
-        $actualProxy = $registry->get($identifier);
+        $actualCallable = $registry->get($identifier);
 
-        $this->assertSame($expectedProxy, $actualProxy);
+        $this->assertSame($expectedCallable, $actualCallable);
     }
 
     /**

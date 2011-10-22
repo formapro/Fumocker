@@ -129,12 +129,14 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         //guard
         $this->assertFunctionNotExists('test_redirect_call_to_proxy', __NAMESPACE__);
 
-        $proxy = $this->getMock(
-            'Fumocker\Proxy', array('call'), array('test_redirect_call_to_proxy', __NAMESPACE__));
-
-        $proxy
+        $mockCallable = $this->getMock('\stdClass', array('__invoke'));
+        $mockCallable
             ->expects($this->once())
-            ->method('call');
+            ->method('__invoke')
+        ;
+
+        $proxy = new Proxy('test_redirect_call_to_proxy', __NAMESPACE__);
+        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
@@ -158,12 +160,10 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $expectedSecondArgument = array('bar');
         $expectedThirdArgument = new \stdClass();
 
-        $proxy = $this->getMock(
-            'Fumocker\Proxy', array('call'), array('test_proxy_arguments_proxy', __NAMESPACE__));
-
-        $proxy
+        $mockCallable = $this->getMock('\stdClass', array('__invoke'));
+        $mockCallable
             ->expects($this->once())
-            ->method('call')
+            ->method('__invoke')
             ->with(
                 $this->equalTo($expectedFirstArgument),
                 $this->equalTo($expectedSecondArgument),
@@ -171,6 +171,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
+        $proxy = new Proxy('test_proxy_arguments_proxy', __NAMESPACE__);
+        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
@@ -190,16 +192,17 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         //guard
         $this->assertFunctionNotExists('test_return_proxy_result', __NAMESPACE__);
 
-        $proxy = $this->getMock(
-            'Fumocker\Proxy', array('call'), array('test_return_proxy_result', __NAMESPACE__));
+        $expectedResult = 'foo';
 
-        $excpectedResult = 'foo';
-
-        $proxy
+        $mockCallable = $this->getMock('\stdClass', array('__invoke'));
+        $mockCallable
             ->expects($this->once())
-            ->method('call')
-            ->will($this->returnValue($excpectedResult))
+            ->method('__invoke')
+            ->will($this->returnValue($expectedResult))
         ;
+
+        $proxy = new Proxy('test_return_proxy_result', __NAMESPACE__);
+        $proxy->setCallback($mockCallable);
 
         $generator = new Generator();
 
@@ -208,7 +211,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFunctionExists('test_return_proxy_result', __NAMESPACE__);
 
-        $this->assertEquals($excpectedResult, test_return_proxy_result());
+        $this->assertEquals($expectedResult, test_return_proxy_result());
     }
 
     public function assertFunctionExists($functionName, $namesppace)
