@@ -10,17 +10,9 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldRequireRegistryToBeProvidedInConstructor()
-    {
-        new Generator($this->createRegistryStub());
-    }
-
-    /**
-     * @test
-     */
     public function shouldAllowToCheckWhetherFunctionMocked()
     {
-        $generator = new Generator($this->createRegistryStub());
+        $generator = new Generator();
         $proxy = new Proxy('mocked_function', __NAMESPACE__);
 
         $this->assertTrue($generator->isMocked($proxy), 'Should be mocked function');
@@ -31,7 +23,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowToCheckWhetherFunctionMockedOrUserDefined()
     {
-        $generator = new Generator($this->createRegistryStub());
+        $generator = new Generator();
         $proxy = new Proxy('user_defined_function', __NAMESPACE__);
 
         $this->assertFalse($generator->isMocked($proxy), 'Should be user defined function');
@@ -45,7 +37,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function throwIfUserAlreadyDefineFunctionInTheNamespace()
     {
-        $generator = new Generator($this->createRegistryStub());
+        $generator = new Generator();
 
         $generator->generate(new Proxy('user_defined_function', __NAMESPACE__));
     }
@@ -58,7 +50,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function throwIfMockedFunctionAlreadyExistInTheNamespace()
     {
-        $generator = new Generator($this->createRegistryStub());
+        $generator = new Generator();
 
         $generator->generate(new Proxy('mocked_function', __NAMESPACE__));
     }
@@ -73,7 +65,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
         $proxy = new Proxy('test_generate_function_mock', __NAMESPACE__);
 
-        $generator = new Generator($this->createRegistryStub());
+        $generator = new Generator();
 
         $generator->generate($proxy);
 
@@ -84,26 +76,27 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSetProxyToARegistryWithIdentifierWhileGeneratingAMock()
+    public function shouldReturnUniqueIdentifierAssignedForMockedFunction()
     {
         //guard
-        $this->assertFalse(function_exists(__NAMESPACE__ . '\\' . 'test_set_to_registry'));
+        $this->assertFalse(function_exists(__NAMESPACE__ . '\\' . 'test_unique_identifier_one'));
+        $this->assertFalse(function_exists(__NAMESPACE__ . '\\' . 'test_unique_identifier_two'));
 
-        $proxy = new Proxy('test_set_to_registry', __NAMESPACE__);
+        $proxyOne = new Proxy('test_unique_identifier_one', __NAMESPACE__);
+        $proxyTwo = new Proxy('test_unique_identifier_two', __NAMESPACE__);
 
-        $registry = $this->getMock('Fumocker\Registry', array('setProxy'), array(), '', false);
-        $registry
-            ->expects($this->once())
-            ->method('setProxy')
-            ->with(
-                $this->equalTo(spl_object_hash($proxy)),
-                $this->equalTo($proxy)
-            )
-        ;
+        $generator = new Generator();
 
-        $generator = new Generator($registry);
+        $identifierOne = $generator->generate($proxyOne);
+        $identifierTwo = $generator->generate($proxyTwo);
 
-        $generator->generate($proxy);
+        $this->assertInternalType('string', $identifierOne);
+        $this->assertInternalType('string', $identifierTwo);
+
+        $this->assertNotEmpty($identifierOne);
+        $this->assertNotEmpty($identifierTwo);
+
+        $this->assertNotEquals($identifierOne, $identifierTwo);
     }
 
     /**
@@ -117,7 +110,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $proxy = new Proxy('test_set_identifier', __NAMESPACE__);
         $proxy->setCallback(function() {});
 
-        $generator = new Generator(Registry::getInstance());
+        $generator = new Generator();
 
         $generator->generate($proxy);
 
@@ -141,9 +134,10 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('call');
 
-        $generator = new Generator(Registry::getInstance());
+        $generator = new Generator();
 
-        $generator->generate($proxy);
+        $identifier = $generator->generate($proxy);
+        Registry::getInstance()->setProxy($identifier, $proxy);
 
         $this->assertTrue(function_exists(__NAMESPACE__ . '\\' . 'test_redirect_call_to_proxy'));
 
@@ -176,9 +170,10 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         ;
 
 
-        $generator = new Generator(Registry::getInstance());
+        $generator = new Generator();
 
-        $generator->generate($proxy);
+        $identifier = $generator->generate($proxy);
+        Registry::getInstance()->setProxy($identifier, $proxy);
 
         $this->assertTrue(function_exists(__NAMESPACE__ . '\\' . 'test_proxy_arguments_proxy'));
 
@@ -204,21 +199,14 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($excpectedResult))
         ;
 
-        $generator = new Generator(Registry::getInstance());
+        $generator = new Generator();
 
-        $generator->generate($proxy);
+        $identifier = $generator->generate($proxy);
+        Registry::getInstance()->setProxy($identifier, $proxy);
 
         $this->assertTrue(function_exists(__NAMESPACE__ . '\\' . 'test_return_proxy_result'));
 
         $this->assertEquals($excpectedResult, test_return_proxy_result());
-    }
-
-    /**
-     * @return \Fumocker\Registry
-     */
-    protected function createRegistryStub()
-    {
-        return $this->getMock('Fumocker\Registry', array(), array(), '', false);
     }
 }
 

@@ -3,13 +3,6 @@ namespace Fumocker;
 
 class Generator
 {
-    protected $registry;
-
-    public function __construct(Registry $registry)
-    {
-        $this->registry = $registry;
-    }
-
     /**
      * @throws \LogicException
      *
@@ -31,7 +24,6 @@ class Generator
         }
 
         $identifier = spl_object_hash($proxy);
-        $this->registry->setProxy($identifier, $proxy);
 
         $code =
 "
@@ -49,6 +41,8 @@ function {$proxy->getFunctionName()}()
 }
 ";
         eval($code);
+
+        return $identifier;
     }
 
     /**
