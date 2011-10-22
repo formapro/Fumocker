@@ -13,9 +13,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldAllowToCheckWhetherFunctionMocked()
     {
         $generator = new Generator();
-        $proxy = new Proxy('mocked_function', __NAMESPACE__);
 
-        $this->assertTrue($generator->isMocked($proxy), 'Should be mocked function');
+        $this->assertTrue($generator->isMocked('mocked_function', __NAMESPACE__), 'Should be mocked function');
     }
 
     /**
@@ -24,9 +23,8 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldAllowToCheckWhetherFunctionMockedOrUserDefined()
     {
         $generator = new Generator();
-        $proxy = new Proxy('user_defined_function', __NAMESPACE__);
 
-        $this->assertFalse($generator->isMocked($proxy), 'Should be user defined function');
+        $this->assertFalse($generator->isMocked('user_defined_function', __NAMESPACE__), 'Should be user defined function');
     }
 
     /**
@@ -70,7 +68,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $generator->generate($proxy);
 
         $this->assertFunctionExists('test_generate_function_mock', __NAMESPACE__);
-        $this->assertTrue($generator->isMocked($proxy));
+        $this->assertTrue($generator->isMocked('test_generate_function_mock', __NAMESPACE__));
     }
 
     /**

@@ -13,15 +13,22 @@ class Generator
      */
     public function generate(Proxy $proxy)
     {
-        if (\function_exists($proxy->getNamespace() . '\\' . $proxy->getFunctionName()) && false == $this->isMocked($proxy)) {
+        $functionName = $proxy->getFunctionName();
+        $namespace = $proxy->getNamespace();
+
+        if (\function_exists("$namespace\\$functionName") && false == $this->isMocked($functionName, $namespace)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has already been defined by a user',
-                $proxy->getFunctionName(), $proxy->getNamespace()));
+                $functionName,
+                $namespace
+            ));
         }
-        if ($this->isMocked($proxy)) {
+        if ($this->isMocked($functionName, $namespace)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has been already mocked',
-                $proxy->getFunctionName(),$proxy->getNamespace()));
+                $functionName,
+                $namespace
+            ));
         }
 
         $identifier = spl_object_hash($proxy);
@@ -49,9 +56,9 @@ function {$proxy->getFunctionName()}()
      *
      * @return bool
      */
-    public function isMocked(Proxy $proxy)
+    public function isMocked($functionName, $namespace)
     {
-        return defined($proxy->getNamespace(). '\\' . $this->generateConstant($proxy->getFunctionName()));
+        return defined($namespace . '\\' . $this->generateConstant($functionName));
     }
 
     /**
