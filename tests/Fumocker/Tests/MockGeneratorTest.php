@@ -71,43 +71,17 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldReturnUniqueIdentifierAssignedForMockedFunction()
-    {
-        //guard
-        $this->assertFunctionNotExists('test_unique_identifier_one', __NAMESPACE__);
-        $this->assertFunctionNotExists('test_unique_identifier_two', __NAMESPACE__);
-
-        $generator = new MockGenerator();
-
-        $identifierOne = $generator->generate('test_unique_identifier_one', __NAMESPACE__);
-        $identifierTwo = $generator->generate('test_unique_identifier_two', __NAMESPACE__);
-
-        $this->assertInternalType('string', $identifierOne);
-        $this->assertInternalType('string', $identifierTwo);
-
-        $this->assertNotEmpty($identifierOne);
-        $this->assertNotEmpty($identifierTwo);
-
-        $this->assertNotEquals($identifierOne, $identifierTwo);
-    }
-
-    /**
-     * @test
-     */
-    public function shouldSetIdentifierToMockedFunctionConstantWhileGeneratingMock()
+    public function shouldGenerateConstantWhileGeneratingFunctionMock()
     {
         //guard
         $this->assertFunctionNotExists('test_set_identifier', __NAMESPACE__);
 
         $generator = new MockGenerator();
 
-        $expectedIdentifier = $generator->generate('test_set_identifier', __NAMESPACE__);
+        $generator->generate('test_set_identifier', __NAMESPACE__);
 
         $mockedFunctionConstant = __NAMESPACE__ . '\\' . '__FUMOCKER_TEST_SET_IDENTIFIER';
         $this->assertTrue(defined($mockedFunctionConstant));
-
-        $actualIdentifier = constant($mockedFunctionConstant);
-        $this->assertEquals($expectedIdentifier, $actualIdentifier);
     }
 
     /**
@@ -126,8 +100,8 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $identifier = $generator->generate('test_redirect_call_to_callable', __NAMESPACE__);
-        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
+        $generator->generate('test_redirect_call_to_callable', __NAMESPACE__);
+        CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_redirect_call_to_callable', $mockCallable);
 
         $this->assertFunctionExists('test_redirect_call_to_callable', __NAMESPACE__);
 
@@ -159,8 +133,8 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $identifier = $generator->generate('test_proxy_arguments_to_callable', __NAMESPACE__);
-        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
+        $generator->generate('test_proxy_arguments_to_callable', __NAMESPACE__);
+        CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_proxy_arguments_to_callable', $mockCallable);
 
         $this->assertFunctionExists('test_proxy_arguments_to_callable', __NAMESPACE__);
 
@@ -186,8 +160,8 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $identifier = $generator->generate('test_return_callable_result', __NAMESPACE__);
-        CallbackRegistry::getInstance()->set($identifier, $mockCallable);
+        $generator->generate('test_return_callable_result', __NAMESPACE__);
+        CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_return_callable_result' ,$mockCallable);
 
         $this->assertFunctionExists('test_return_callable_result', __NAMESPACE__);
 

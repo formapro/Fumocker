@@ -29,24 +29,21 @@ class MockGenerator
         }
 
         $constantName = $this->generateConstantName($functionName);
-        $identifier = "$namespace\\$functionName";
 
         $code =
 "
 namespace {$namespace};
 
-const {$constantName} = '{$identifier}';
+const {$constantName} = 1;
 
 function {$functionName}()
 {
-    \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$identifier}');
+    \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$namespace}', '{$functionName}');
 
     return \\call_user_func_array(\$callable, \\func_get_args());
 }
 ";
         eval($code);
-
-        return $identifier;
     }
 
     /**

@@ -28,41 +28,49 @@ class CallbackRegistry
     }
 
     /**
-     * @throws \InvalidArgumentException if identifier is not valid
+     * @throws \InvalidArgumentException if function name is not valid
+     * @throws \InvalidArgumentException if namespace is not valid
      * @throws \InvalidArgumentException if invalid callable provided
      *
-     * @param string $identifier
+     * @param string $functionName
+     * @param string $namespace
      * @param Callable $callable
      *
      * @return void
      */
-    public function set($identifier, $callable)
+    public function set($namespace, $functionName, $callable)
     {
-        if (false == is_string($identifier)) {
-            throw new \InvalidArgumentException('Invalid identifier provided, Should be not empty string');
+        if (false == is_string($functionName)) {
+            throw new \InvalidArgumentException('Invalid function name provided. Should be a string');
+        }
+        if (false == is_string($namespace)) {
+            throw new \InvalidArgumentException('Invalid namespace provided. Should be a string');
         }
         if (false == \is_callable($callable)) {
             throw new \InvalidArgumentException('Invalid callable provided');
         }
 
-        $this->callables[$identifier] = $callable;
+        $this->callables["$namespace\\$functionName"] = $callable;
     }
 
     /**
-     * @throws \InvalidArgumentException if callable for a given does not exist
+     * @throws \InvalidArgumentException if callable for a given namespace\function does not exist
      *
-     * @param $identifier
+     * @param string $functionName
+     * @param string $namespace
      *
      * @return Callable
      */
-    public function get($identifier)
+    public function get($namespace, $functionName)
     {
-        if (false == isset($this->callables[$identifier])) {
+        if (false == isset($this->callables["$namespace\\$functionName"])) {
             throw new \InvalidArgumentException(
-                \sprintf('Invalid identifier `%s` given. Cannot find a callable related to it.', $identifier));
+                \sprintf('Cannot find a callable related to %s()',
+                "$namespace\\$functionName"
+            ));
         }
 
-        return $this->callables[$identifier];
+        return $this->callables["$namespace\\$functionName"];
     }
 
     /**

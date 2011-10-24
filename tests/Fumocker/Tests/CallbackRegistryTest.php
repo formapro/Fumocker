@@ -25,7 +25,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAllowToSetCallable($validCallable)
     {
-        CallbackRegistry::getInstance()->set('an_id', $validCallable);
+        CallbackRegistry::getInstance()->set('namespace', 'functionName', $validCallable);
     }
 
     /**
@@ -38,36 +38,52 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function throwWhenSetInvalidCallable($invalidCallable)
     {
-        CallbackRegistry::getInstance()->set('an_id', $invalidCallable);
+        CallbackRegistry::getInstance()->set('namespace', 'functionName', $invalidCallable);
     }
 
     /**
      * @test
      *
-     * @dataProvider provideInvalidIdentifiers
+     * @dataProvider provideNoStrings
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid identifier provided, Should be not empty string
+     * @expectedExceptionMessage Invalid function name provided. Should be a string
      */
-    public function throwWhenSetCallableWithInvalidIdentifier($invalidIdentifier)
+    public function throwWhenSetCallableWithInvalidFunctionName($invalidFunctionName)
     {
         $registry = CallbackRegistry::getInstance();
 
-        $registry->set($invalidIdentifier, function(){});
+        $registry->set('namespace', $invalidFunctionName, function(){});
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideNoStrings
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid namespace provided. Should be a string
+     */
+    public function throwWhenSetCallableWithInvalidNamespace($invalidNamespace)
+    {
+        $registry = CallbackRegistry::getInstance();
+
+        $registry->set($invalidNamespace, 'functionName', function(){});
     }
 
     /**
      * @test
      */
-    public function shouldAllowToGetCallableByIdentifier()
+    public function shouldAllowToGetCallableByFunctionNameAndNamespace()
     {
-        $identifier = 'an_id';
+        $functionName = 'functionFoo';
+        $namespace = 'foo';
         $expectedCallable = function(){};
 
         $registry = CallbackRegistry::getInstance();
-        $registry->set($identifier, $expectedCallable);
+        $registry->set($namespace, $functionName, $expectedCallable);
 
-        $actualCallable = $registry->get($identifier);
+        $actualCallable = $registry->get($namespace, $functionName);
 
         $this->assertSame($expectedCallable, $actualCallable);
     }
@@ -76,13 +92,13 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      * @test
      *
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid identifier `not_set_callable` given. Cannot find a callable related to it.
+     * @expectedExceptionMessage Cannot find a callable related to foo_ns\bar_func()
      */
     public function throwWhenGetCallableNotSetBefore()
     {
         $registry = CallbackRegistry::getInstance();
 
-        $registry->get('not_set_callable');
+        $registry->get('foo_ns', 'bar_func');
     }
 
     /**
@@ -135,7 +151,7 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    public static function provideInvalidIdentifiers()
+    public static function provideNoStrings()
     {
         return array(
             array(null),
