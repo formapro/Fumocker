@@ -19,81 +19,6 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @static
-     *
-     * @return array
-     */
-    public static function provideInvalidIdentifiers()
-    {
-        return array(
-            array(null),
-            array(true),
-            array(false),
-            array(new \stdClass()),
-            array(function() {}),
-            array(-10),
-            array(0),
-            array(10),
-            array(1.1),
-        );
-    }
-
-    /**
-     * @static
-     *
-     * @return array
-     */
-    public static function provideValidIdentifiers()
-    {
-        return array(
-            array('a'),
-            array('a1'),
-            array(''),
-            array('  '),
-        );
-    }
-
-    /**
-     * @static
-     *
-     * @return array
-     */
-    public static function provideValidCallbacks()
-    {
-        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
-        $object_method = array(new StubMethodCall(), 'objectMethod');
-        $closure = function() {};
-        $function = 'is_callable';
-
-        return array(
-            array($static_method),
-            array($object_method),
-            array($closure),
-            array($function),
-        );
-    }
-
-    /**
-     * @static
-     *
-     * @return array
-     */
-    public static function provideNoCallableItems()
-    {
-        return array(
-            array('string'),
-            array(1),
-            array(12.2),
-            array(array()),
-            array(false),
-            array(null),
-            array(new \stdClass()),
-            array(array(new \stdClass(), 'no_exist_method')),
-            array(array('stdClass', 'no_exist_method')),
-        );
-    }
-
-    /**
      * @test
      *
      * @dataProvider provideValidCallbacks
@@ -203,6 +128,81 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
         $registryTwo = CallbackRegistry::getInstance();
 
         $this->assertSame($registryOne, $registryTwo);
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideInvalidIdentifiers()
+    {
+        return array(
+            array(null),
+            array(true),
+            array(false),
+            array(new \stdClass()),
+            array(function() {}),
+            array(-10),
+            array(0),
+            array(10),
+            array(1.1),
+        );
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideValidIdentifiers()
+    {
+        return array(
+            array('a'),
+            array('a1'),
+            array(''),
+            array('  '),
+        );
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideValidCallbacks()
+    {
+        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
+        $object_method = array(new StubMethodCall(), 'objectMethod');
+        $closure = function() {};
+        $function = 'is_callable';
+
+        return array(
+            array($static_method),
+            array($object_method),
+            array($closure),
+            array($function),
+        );
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideNoCallableItems()
+    {
+        return array(
+            array('string'),
+            array(1),
+            array(12.2),
+            array(array()),
+            array(false),
+            array(null),
+            array(new \stdClass()),
+            array(array(new \stdClass(), 'no_exist_method')),
+            array(array('stdClass', 'no_exist_method')),
+        );
     }
 }
 
