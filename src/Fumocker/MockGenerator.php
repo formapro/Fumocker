@@ -28,7 +28,7 @@ class MockGenerator
             ));
         }
 
-        $constantName = $this->generateConstant($functionName);
+        $constantName = $this->generateConstantName($functionName);
         $identifier = "$namespace\\$functionName";
 
         $code =
@@ -56,7 +56,7 @@ function {$functionName}()
      */
     public function isMocked($functionName, $namespace)
     {
-        return defined($namespace . '\\' . $this->generateConstant($functionName));
+        return defined($namespace . '\\' . $this->generateConstantName($functionName));
     }
 
     /**
@@ -64,7 +64,7 @@ function {$functionName}()
      *
      * @return string
      */
-    protected function generateConstant($functionName)
+    protected function generateConstantName($functionName)
     {
         return '__FUMOCKER_'.strtoupper($functionName);
     }
