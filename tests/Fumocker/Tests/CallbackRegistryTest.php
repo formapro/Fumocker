@@ -172,14 +172,14 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      */
     public static function provideValidCallbacks()
     {
-        $static_method = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
-        $object_method = array(new StubMethodCall(), 'objectMethod');
+        $staticMethod = array(__NAMESPACE__.'\StubMethodCall', 'staticMethod');
+        $objectMethod = array(new StubMethodCall(), 'objectMethod');
         $closure = function() {};
         $function = 'is_callable';
 
         return array(
-            array($static_method),
-            array($object_method),
+            array($staticMethod),
+            array($objectMethod),
             array($closure),
             array($function),
         );
