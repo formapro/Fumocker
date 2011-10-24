@@ -13,7 +13,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $this->assertTrue($generator->isMocked('mocked_function', __NAMESPACE__), 'Should be mocked function');
+        $this->assertTrue($generator->hasGenerated('mocked_function', __NAMESPACE__), 'Should be mocked function');
     }
 
     /**
@@ -23,7 +23,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $this->assertFalse($generator->isMocked('user_defined_function', __NAMESPACE__), 'Should be user defined function');
+        $this->assertFalse($generator->hasGenerated('user_defined_function', __NAMESPACE__), 'Should be user defined function');
     }
 
     /**
@@ -65,7 +65,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator->generate('test_generate_function_mock', __NAMESPACE__);
 
         $this->assertFunctionExists('test_generate_function_mock', __NAMESPACE__);
-        $this->assertTrue($generator->isMocked('test_generate_function_mock', __NAMESPACE__));
+        $this->assertTrue($generator->hasGenerated('test_generate_function_mock', __NAMESPACE__));
     }
 
     /**

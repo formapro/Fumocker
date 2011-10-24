@@ -13,14 +13,14 @@ class MockGenerator
      */
     public function generate($functionName, $namespace)
     {
-        if (\function_exists("$namespace\\$functionName") && false == $this->isMocked($functionName, $namespace)) {
+        if (\function_exists("$namespace\\$functionName") && false == $this->hasGenerated($functionName, $namespace)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has already been defined by a user',
                 $functionName,
                 $namespace
             ));
         }
-        if ($this->isMocked($functionName, $namespace)) {
+        if ($this->hasGenerated($functionName, $namespace)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has been already mocked',
                 $functionName,
@@ -54,7 +54,7 @@ function {$functionName}()
      *
      * @return bool
      */
-    public function isMocked($functionName, $namespace)
+    public function hasGenerated($functionName, $namespace)
     {
         return defined($namespace . '\\' . $this->generateConstantName($functionName));
     }
