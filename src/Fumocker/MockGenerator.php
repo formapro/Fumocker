@@ -7,7 +7,8 @@ class MockGenerator
      * @throws \LogicException if the function has already been created by a user in the given namespace
      * @throws \LogicException if the function has already been mocked in the given namespace
      *
-     * @param Proxy $proxy
+     * @param string $functionName
+     * @param string $namespace
      *
      * @return void
      */
