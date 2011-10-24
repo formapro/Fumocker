@@ -8,6 +8,67 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
+     *
+     * @dataProvider provideNotStringTypes
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid function name provided
+     */
+    public function throwWhenFunctionNameNotStringWhileGeneration($invalidFunctionName)
+    {
+        $generator = new MockGenerator();
+
+        $generator->generate($invalidFunctionName, 'namespace');
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideEmpties
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Given function name is empty
+     */
+    public function throwWhenFunctionEmptyWhileGeneration($emptyFunctionName)
+    {
+        $generator = new MockGenerator();
+
+        $generator->generate($emptyFunctionName, 'namespace');
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideNotStringTypes
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid namespace provided
+     */
+    public function throwWhenNamespaceNotStringWhileGeneration($invalidNamespace)
+    {
+        $generator = new MockGenerator();
+
+        $generator->generate('function', $invalidNamespace);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider provideEmpties
+     *
+     * @expectedException LogicException
+     * @expectedExceptionMessage Given namespace is empty
+     */
+    public function throwWhenNamespaceEmptyWhileGeneration($emptyNamespace)
+    {
+        $generator = new MockGenerator();
+
+        $generator->generate('function', $emptyNamespace);
+    }
+
+
+    /**
+     * @test
      */
     public function shouldAllowToCheckWhetherFunctionMocked()
     {
@@ -176,6 +237,34 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function assertFunctionNotExists($functionName, $namesppace)
     {
         $this->assertFalse(function_exists($namesppace . '\\' . $functionName));
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideNotStringTypes()
+    {
+        return array(
+            array(123),
+            array(new \stdClass()),
+            array(array()),
+            array(null),
+        );
+    }
+
+    /**
+     * @static
+     *
+     * @return array
+     */
+    public static function provideEmpties()
+    {
+        return array(
+            array(''),
+            array('  '),
+        );
     }
 }
 

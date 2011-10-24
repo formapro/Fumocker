@@ -4,6 +4,10 @@ namespace Fumocker;
 class MockGenerator
 {
     /**
+     * @throws \InvalidArgumentException if function not a string
+     * @throws \InvalidArgumentException if function an empty string
+     * @throws \InvalidArgumentException if namespace not a string
+     * @throws \InvalidArgumentException if namespace an empty string
      * @throws \LogicException if the function has already been created by a user in the given namespace
      * @throws \LogicException if the function has already been mocked in the given namespace
      *
@@ -13,6 +17,72 @@ class MockGenerator
      * @return void
      */
     public function generate($functionName, $namespace)
+    {
+        $this->throwInvalidFunctionName($functionName);
+        $this->throwInvalidNamespace($namespace);
+        $this->throwCanNotGenerateFunction($functionName, $namespace);
+
+        $code =
+"
+namespace {$namespace};
+
+const {$this->generateConstantName($functionName)} = 1;
+
+function {$functionName}()
+{
+    \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$namespace}', '{$functionName}');
+
+    return \\call_user_func_array(\$callable, \\func_get_args());
+}
+";
+        eval($code);
+    }
+
+    /**
+     * @throws \InvalidArgumentException if function not a string
+     * @throws \InvalidArgumentException if function an empty string
+     *
+     * @param string $functionName
+     *
+     * @return void
+     */
+    protected function throwInvalidFunctionName($functionName)
+    {
+        if (false == \is_string($functionName)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Invalid function name provided. should be string but `%s` provided', \gettype($functionName)));
+        }
+
+        $functionName = \trim($functionName);
+        if (empty($functionName)) {
+            throw new \InvalidArgumentException('Given function name is empty');
+        }
+    }
+
+    /**
+     * @throws \InvalidArgumentException if namespace not a string
+     * @throws \InvalidArgumentException if namespace an empty string
+     *
+     * @param string $namespace
+     *
+     * @return void
+     */
+    protected function throwInvalidNamespace($namespace)
+    {
+        if (false == \is_string($namespace)) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Invalid namespace provided. should be string but `%s` provided',
+                \gettype($namespace)
+            ));
+        }
+
+        $namespace = \trim($namespace);
+        if (empty($namespace)) {
+            throw new \InvalidArgumentException('Given namespace is empty');
+        }
+    }
+
+    protected function throwCanNotGenerateFunction($functionName, $namespace)
     {
         if (\function_exists("$namespace\\$functionName") && false == $this->hasGenerated($functionName, $namespace)) {
             throw new \LogicException(sprintf(
@@ -28,23 +98,6 @@ class MockGenerator
                 $namespace
             ));
         }
-
-        $constantName = $this->generateConstantName($functionName);
-
-        $code =
-"
-namespace {$namespace};
-
-const {$constantName} = 1;
-
-function {$functionName}()
-{
-    \$callable = \\Fumocker\\CallbackRegistry::getInstance()->get('{$namespace}', '{$functionName}');
-
-    return \\call_user_func_array(\$callable, \\func_get_args());
-}
-";
-        eval($code);
     }
 
     /**
