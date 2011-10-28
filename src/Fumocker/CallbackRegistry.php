@@ -50,7 +50,7 @@ class CallbackRegistry
             throw new \InvalidArgumentException('Invalid callable provided');
         }
 
-        $this->callables["$namespace\\$functionName"] = $callable;
+        $this->callables["$namespace\\$functionName"] = array($namespace, $functionName, $callable);
     }
 
     /**
@@ -70,7 +70,12 @@ class CallbackRegistry
             ));
         }
 
-        return $this->callables["$namespace\\$functionName"];
+        return $this->callables["$namespace\\$functionName"][2];
+    }
+
+    public function getAll()
+    {
+        return array_values($this->callables);
     }
 
     /**
