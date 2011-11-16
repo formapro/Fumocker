@@ -26,7 +26,7 @@ class MockGenerator
 "
 namespace {$namespace};
 
-const {$this->generateConstantName($functionName)} = 1;
+const {$this->generateConstantName($functionName)} = true;
 
 function {$functionName}()
 {
