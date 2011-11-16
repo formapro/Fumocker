@@ -1,0 +1,1 @@
+# Fumocker [![Build Status](https://secure.travis-ci.org/formapro/Fumocker.png?branch=master)](http://travis-ci.org/formapro/Fumocker)
