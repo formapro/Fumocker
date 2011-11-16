@@ -82,6 +82,15 @@ function {$functionName}()
         }
     }
 
+    /**
+     * @throws \LogicException if function was created by user
+     * @throws \LogicException if function has already been defined
+     *
+     * @param string $functionName
+     * @param string $namespace
+     *
+     * @return void
+     */
     protected function throwCanNotGenerateFunction($functionName, $namespace)
     {
         if (\function_exists("$namespace\\$functionName") && false == $this->hasGenerated($functionName, $namespace)) {
