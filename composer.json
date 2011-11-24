@@ -1,0 +1,26 @@
+{
+    "name": "fp/fumocker",
+    "type": "library",
+    "description": "A php function mocker",
+    "keywords": ["unit test", "function mock", "phpunit"],
+    "homepage": "http://github.com/formapro/Fumocker",
+    "version": "0.0.1-DEV",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vadim Tyukov",
+            "email": "brainreflex@gmail.com"
+        },
+        {
+            "name": "Maksim Kotlyar",
+            "email": "kotlyar.maksim@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/class-loader": "2.0.*"
+    },
+    "autoload": {
+        "psr-0": { "Fumocker\\Tests": "tests/", "Fumocker": "src/" }
+    }
+}
