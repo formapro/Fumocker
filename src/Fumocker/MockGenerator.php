@@ -16,11 +16,11 @@ class MockGenerator
      *
      * @return void
      */
-    public function generate($functionName, $namespace)
+    public function generate($namespace, $functionName)
     {
         $this->throwInvalidFunctionName($functionName);
         $this->throwInvalidNamespace($namespace);
-        $this->throwCanNotGenerateFunction($functionName, $namespace);
+        $this->throwCanNotGenerateFunction($namespace, $functionName);
 
         $code =
 "
@@ -91,16 +91,16 @@ function {$functionName}()
      *
      * @return void
      */
-    protected function throwCanNotGenerateFunction($functionName, $namespace)
+    protected function throwCanNotGenerateFunction($namespace, $functionName)
     {
-        if (\function_exists("$namespace\\$functionName") && false == $this->hasGenerated($functionName, $namespace)) {
+        if (\function_exists("$namespace\\$functionName") && false == $this->hasGenerated($namespace, $functionName)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has already been defined by a user',
                 $functionName,
                 $namespace
             ));
         }
-        if ($this->hasGenerated($functionName, $namespace)) {
+        if ($this->hasGenerated($namespace, $functionName)) {
             throw new \LogicException(sprintf(
                 'The function `%s` in the namespace `%s` has been already mocked',
                 $functionName,
@@ -114,7 +114,7 @@ function {$functionName}()
      *
      * @return bool
      */
-    public function hasGenerated($functionName, $namespace)
+    public function hasGenerated($namespace, $functionName)
     {
         return defined($namespace . '\\' . $this->generateConstantName($functionName));
     }
