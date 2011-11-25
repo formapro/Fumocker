@@ -132,8 +132,16 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getAll')
             ->will($this->returnValue(array(
-                array($firstNamespace, $firstFunctionName, $firstCallable),
-                array($secondNamespace, $secondFunctionName, $secondCallable),
+                array(
+                    'namespace' => $firstNamespace,
+                    'function' => $firstFunctionName,
+                    'callable' => $firstCallable,
+                ),
+                array(
+                    'namespace' => $secondNamespace,
+                    'function' => $secondFunctionName,
+                    'callable' => $secondCallable
+                ),
             )))
         ;
         $registryMock

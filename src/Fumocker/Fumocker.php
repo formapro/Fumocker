@@ -56,9 +56,7 @@ class Fumocker
     public function setGlobals()
     {
         foreach ($this->registry->getAll() as $data) {
-            list($namespace, $function) = $data;
-
-            $this->registry->set($namespace, $function, $function);
+            $this->registry->set($data['namespace'], $data['function'], $data['function']);
         }
     }
 }

@@ -172,15 +172,19 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $callables[0]);
         $this->assertInternalType('array', $callables[1]);
 
-        $this->assertEquals(
-            array($expectedNamespaceFoo, $expectedFunctionFoo, $expectedCallableFoo),
-            $callables[0]
+        $expectedFirstCallable = array(
+            'namespace' => $expectedNamespaceFoo,
+            'function' => $expectedFunctionFoo,
+            'callable' => $expectedCallableFoo
         );
+        $this->assertEquals($expectedFirstCallable, $callables[0]);
 
-        $this->assertEquals(
-            array($expectedNamespaceBar, $expectedFunctionBar, $expectedCallableBar),
-            $callables[1]
+        $expectedSecondCallable = array(
+            'namespace' => $expectedNamespaceBar,
+            'function' => $expectedFunctionBar,
+            'callable' => $expectedCallableBar
         );
+        $this->assertEquals($expectedSecondCallable, $callables[1]);
     }
 
     /**
