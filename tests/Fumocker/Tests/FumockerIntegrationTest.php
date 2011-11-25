@@ -1,20 +1,20 @@
 <?php
 namespace Fumocker\Tests;
 
-use Fumocker\Facade;
+use Fumocker\Fumocker;
 use Fumocker\MockGenerator;
 use Fumocker\CallbackRegistry;
 
-class FacadeIntegrationTest extends \PHPUnit_Framework_TestCase
+class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Fumocker\Facade
+     * @var \Fumocker\Fumocker
      */
     protected static $fumocker;
 
     public static function setUpBeforeClass()
     {
-        self::$fumocker = new Facade(new MockGenerator(), CallbackRegistry::getInstance());
+        self::$fumocker = new Fumocker(new MockGenerator(), CallbackRegistry::getInstance());
     }
 
     public function tearDown()

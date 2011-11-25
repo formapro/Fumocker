@@ -1,7 +1,7 @@
 <?php
 namespace Fumocker;
 
-class Facade
+class Fumocker
 {
     /**
      * @var \Fumocker\MockGenerator

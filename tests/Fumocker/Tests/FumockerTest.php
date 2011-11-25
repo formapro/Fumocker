@@ -1,7 +1,7 @@
 <?php
 namespace Fumocker\Tests;
 
-use Fumocker\Facade;
+use Fumocker\Fumocker;
 use Fumocker\MockGenerator;
 
 class FacadeTest extends \PHPUnit_Framework_TestCase
@@ -11,7 +11,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldRequiredGeneratorAndRegistrySetInConstructor()
     {
-        new Facade(
+        new Fumocker(
             $this->createGeneratorMock(),
             $this->createCallbackRegistryMock()
         );
@@ -25,7 +25,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
      */
     public function throwWhileSettingCallableIfGlobalFunctionWithThisNameNotExist()
     {
-        $facade = new Facade(
+        $facade = new Fumocker(
             $this->createGeneratorMock(),
             $this->createCallbackRegistryMock()
         );
@@ -67,7 +67,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        $facade = new Facade($generatorMock, $registryMock);
+        $facade = new Fumocker($generatorMock, $registryMock);
 
         $facade->set($namespace, $functionName, $callable);
     }
@@ -102,7 +102,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        $facade = new Facade($generatorMock, $registryMock);
+        $facade = new Fumocker($generatorMock, $registryMock);
 
         $facade->set($namespace, $functionName, $callable);
     }
@@ -155,7 +155,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        $facade = new Facade($generatorMock, $registryMock);
+        $facade = new Fumocker($generatorMock, $registryMock);
 
         $facade->setGlobals();
     }
