@@ -17,7 +17,7 @@ class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->fumocker->setGlobals();
+        $this->fumocker->cleanup();
     }
 
     /**
@@ -53,7 +53,7 @@ class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->getMock('\stdClass', array($function));
 
-        $this->fumocker->set($namespace, $function, array($mock, $function));
+        $this->fumocker->getMock($namespace, $function, array($mock, $function));
 
         return $mock;
     }

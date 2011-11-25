@@ -29,9 +29,9 @@ class Fumocker
      *
      * @throws \InvalidArgumentException if function does not exist in global namespace
      *
-     * @return void
+     * @return PHPUnit_Framework_MockObject_MockObject
      */
-    public function set($namespace, $function, $callable)
+    public function getMock($namespace, $function, $callable)
     {
         if (false == \function_exists($function)) {
             throw new \InvalidArgumentException(\sprintf(
@@ -53,7 +53,7 @@ class Fumocker
      *
      * @return void
      */
-    public function setGlobals()
+    public function cleanup()
     {
         foreach ($this->registry->getAll() as $data) {
             $this->registry->set($data['namespace'], $data['function'], $data['function']);

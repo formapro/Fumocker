@@ -44,7 +44,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             $this->createCallbackRegistryMock()
         );
 
-        $facade->set('Bar', 'foo', function() {});
+        $facade->getMock('Bar', 'foo', function() {});
     }
 
     /**
@@ -83,7 +83,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
 
         $facade = new Fumocker($generatorMock, $registryMock);
 
-        $facade->set($namespace, $functionName, $callable);
+        $facade->getMock($namespace, $functionName, $callable);
     }
 
     /**
@@ -118,7 +118,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
 
         $facade = new Fumocker($generatorMock, $registryMock);
 
-        $facade->set($namespace, $functionName, $callable);
+        $facade->getMock($namespace, $functionName, $callable);
     }
 
     /**
@@ -179,7 +179,7 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
 
         $facade = new Fumocker($generatorMock, $registryMock);
 
-        $facade->setGlobals();
+        $facade->cleanup();
     }
 
     /**
