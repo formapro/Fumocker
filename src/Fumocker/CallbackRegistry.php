@@ -12,7 +12,7 @@ class CallbackRegistry
     /**
      * @var array
      */
-    protected $callables;
+    protected $callables = array();
 
     protected function __construct()
     {
