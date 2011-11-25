@@ -18,7 +18,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate($invalidFunctionName, 'namespace');
+        $generator->generate('namespace', $invalidFunctionName);
     }
 
     /**
@@ -33,7 +33,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate($emptyFunctionName, 'namespace');
+        $generator->generate('namespace', $emptyFunctionName);
     }
 
     /**
@@ -48,7 +48,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate('function', $invalidNamespace);
+        $generator->generate($invalidNamespace, 'function');
     }
 
     /**
@@ -63,7 +63,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate('function', $emptyNamespace);
+        $generator->generate($emptyNamespace, 'function');
     }
 
 
@@ -74,7 +74,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $this->assertTrue($generator->hasGenerated('mocked_function', __NAMESPACE__), 'Should be mocked function');
+        $this->assertTrue($generator->hasGenerated(__NAMESPACE__, 'mocked_function'), 'Should be mocked function');
     }
 
     /**
@@ -84,7 +84,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $this->assertFalse($generator->hasGenerated('user_defined_function', __NAMESPACE__), 'Should be user defined function');
+        $this->assertFalse($generator->hasGenerated(__NAMESPACE__, 'user_defined_function'), 'Should be user defined function');
     }
 
     /**
@@ -97,7 +97,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate('user_defined_function', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'user_defined_function');
     }
 
     /**
@@ -110,7 +110,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $generator = new MockGenerator();
 
-        $generator->generate('mocked_function', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'mocked_function');
     }
 
     /**
@@ -119,14 +119,14 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldGenerateMockedFunction()
     {
         //guard
-        $this->assertFunctionNotExists('test_generate_function_mock', __NAMESPACE__);
+        $this->assertFunctionNotExists(__NAMESPACE__, 'test_generate_function_mock');
 
         $generator = new MockGenerator();
 
-        $generator->generate('test_generate_function_mock', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'test_generate_function_mock');
 
-        $this->assertFunctionExists('test_generate_function_mock', __NAMESPACE__);
-        $this->assertTrue($generator->hasGenerated('test_generate_function_mock', __NAMESPACE__));
+        $this->assertFunctionExists(__NAMESPACE__, 'test_generate_function_mock');
+        $this->assertTrue($generator->hasGenerated(__NAMESPACE__, 'test_generate_function_mock'));
     }
 
     /**
@@ -135,11 +135,11 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldGenerateConstantWhileGeneratingFunctionMock()
     {
         //guard
-        $this->assertFunctionNotExists('test_set_identifier', __NAMESPACE__);
+        $this->assertFunctionNotExists(__NAMESPACE__, 'test_set_identifier');
 
         $generator = new MockGenerator();
 
-        $generator->generate('test_set_identifier', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'test_set_identifier');
 
         $mockedFunctionConstant = __NAMESPACE__ . '\\' . '__FUMOCKER_TEST_SET_IDENTIFIER';
         $this->assertTrue(defined($mockedFunctionConstant));
@@ -151,7 +151,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldRedirectMockedFunctionCallToAssignedCallable()
     {
         //guard
-        $this->assertFunctionNotExists('test_redirect_call_to_callable', __NAMESPACE__);
+        $this->assertFunctionNotExists(__NAMESPACE__, 'test_redirect_call_to_callable');
 
         $mockCallable = $this->getMock('\stdClass', array('__invoke'));
         $mockCallable
@@ -161,10 +161,10 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $generator->generate('test_redirect_call_to_callable', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'test_redirect_call_to_callable');
         CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_redirect_call_to_callable', $mockCallable);
 
-        $this->assertFunctionExists('test_redirect_call_to_callable', __NAMESPACE__);
+        $this->assertFunctionExists(__NAMESPACE__, 'test_redirect_call_to_callable');
 
         test_redirect_call_to_callable();
     }
@@ -175,7 +175,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldProxyMockedFunctionArgumentsToCallable()
     {
         //guard
-        $this->assertFunctionNotExists('test_proxy_arguments_to_callable', __NAMESPACE__);
+        $this->assertFunctionNotExists(__NAMESPACE__, 'test_proxy_arguments_to_callable');
 
         $expectedFirstArgument = 'foo';
         $expectedSecondArgument = array('bar');
@@ -194,10 +194,10 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $generator->generate('test_proxy_arguments_to_callable', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'test_proxy_arguments_to_callable');
         CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_proxy_arguments_to_callable', $mockCallable);
 
-        $this->assertFunctionExists('test_proxy_arguments_to_callable', __NAMESPACE__);
+        $this->assertFunctionExists(__NAMESPACE__, 'test_proxy_arguments_to_callable');
 
         test_proxy_arguments_to_callable($expectedFirstArgument, $expectedSecondArgument, $expectedThirdArgument);
     }
@@ -208,7 +208,7 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
     public function shouldReturnCallableResultAsMockedFunction()
     {
         //guard
-        $this->assertFunctionNotExists('test_return_callable_result', __NAMESPACE__);
+        $this->assertFunctionNotExists(__NAMESPACE__, 'test_return_callable_result');
 
         $expectedResult = 'foo';
 
@@ -221,20 +221,20 @@ class MockGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $generator = new MockGenerator();
 
-        $generator->generate('test_return_callable_result', __NAMESPACE__);
+        $generator->generate(__NAMESPACE__, 'test_return_callable_result');
         CallbackRegistry::getInstance()->set(__NAMESPACE__, 'test_return_callable_result' ,$mockCallable);
 
-        $this->assertFunctionExists('test_return_callable_result', __NAMESPACE__);
+        $this->assertFunctionExists(__NAMESPACE__, 'test_return_callable_result');
 
         $this->assertEquals($expectedResult, test_return_callable_result());
     }
 
-    public function assertFunctionExists($functionName, $namesppace)
+    public function assertFunctionExists($namespace, $functionName)
     {
-        $this->assertTrue(function_exists($namesppace . '\\' . $functionName));
+        $this->assertTrue(function_exists($namespace . '\\' . $functionName));
     }
 
-    public function assertFunctionNotExists($functionName, $namesppace)
+    public function assertFunctionNotExists($namesppace, $functionName)
     {
         $this->assertFalse(function_exists($namesppace . '\\' . $functionName));
     }
