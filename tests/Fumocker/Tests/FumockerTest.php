@@ -4,7 +4,7 @@ namespace Fumocker\Tests;
 use Fumocker\Fumocker;
 use Fumocker\MockGenerator;
 
-class FacadeTest extends \PHPUnit_Framework_TestCase
+class FumockerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
