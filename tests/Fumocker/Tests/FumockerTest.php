@@ -37,24 +37,51 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The global function with name `foo` does not exist.
      */
-    public function throwWhileSettingCallableIfGlobalFunctionWithThisNameNotExist()
+    public function throwWhileGettingMockOfNotExistGlobalFunction()
     {
         $facade = new Fumocker(
             $this->createGeneratorMock(),
             $this->createCallbackRegistryMock()
         );
 
-        $facade->getMock('Bar', 'foo', function() {});
+        $facade->getMock('Bar', 'foo');
     }
 
     /**
      * @test
      */
-    public function shouldGenerateFunctionMockAndSetCallableToRegistry()
+    public function shouldReturnPhpunitMockObjectWithMethodNamedAsGivenFunction()
     {
         $namespace = 'Bar';
-        $functionName = 'mail';
-        $callable = function() {};
+        $function = 'mail';
+
+        $generatorMock = $this->createGeneratorMock();
+        $generatorMock
+            ->expects($this->any())
+            ->method('generate')
+        ;
+
+        $registryMock = $this->createCallbackRegistryMock();
+        $registryMock
+            ->expects($this->any())
+            ->method('set')
+        ;
+
+        $facade = new Fumocker($generatorMock, $registryMock);
+
+        $functionMockObject = $facade->getMock($namespace, $function);
+
+        $this->assertInstanceOf('PHPUnit_Framework_MockObject_MockObject', $functionMockObject);
+        $this->assertTrue(method_exists($functionMockObject, $function));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldGenerateFunctionMockIfNotGenerated()
+    {
+        $namespace = 'Bar';
+        $function = 'mail';
 
         $generatorMock = $this->createGeneratorMock();
         $generatorMock
@@ -62,38 +89,33 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->method('generate')
             ->with(
                 $this->equalTo($namespace),
-                $this->equalTo($functionName)
+                $this->equalTo($function)
             )
         ;
         $generatorMock
             ->expects($this->once())
             ->method('hasGenerated')
-            ->will($this->returnValue(false));
+            ->will($this->returnValue(false))
+        ;
 
         $registryMock = $this->createCallbackRegistryMock();
         $registryMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('set')
-            ->with(
-                $this->equalTo($namespace),
-                $this->equalTo($functionName),
-                $this->equalTo($callable)
-            )
         ;
 
         $facade = new Fumocker($generatorMock, $registryMock);
 
-        $facade->getMock($namespace, $functionName, $callable);
+        $facade->getMock($namespace, $function);
     }
 
     /**
      * @test
      */
-    public function shouldNotGenerateFunctionIfWasGeneratedAndSetCallableToRegistry()
+    public function shouldNotGenerateFunctionMockIfAlreadyGenerated()
     {
         $namespace = 'Bar';
-        $functionName = 'mail';
-        $callable = function() {};
+        $function = 'mail';
 
         $generatorMock = $this->createGeneratorMock();
         $generatorMock
@@ -103,28 +125,62 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
         $generatorMock
             ->expects($this->once())
             ->method('hasGenerated')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue(true))
+        ;
 
         $registryMock = $this->createCallbackRegistryMock();
         $registryMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('set')
-            ->with(
-                $this->equalTo($namespace),
-                $this->equalTo($functionName),
-                $this->equalTo($callable)
-            )
         ;
 
         $facade = new Fumocker($generatorMock, $registryMock);
 
-        $facade->getMock($namespace, $functionName, $callable);
+        $facade->getMock($namespace, $function);
     }
 
     /**
      * @test
      */
-    public function shouldAllowToSetGlobalCallablesForMockedFunctions()
+    public function shouldSetPhpunitMockObjectToCallBackRegistryAsCallable()
+    {
+        $namespace = 'Bar';
+        $function = 'mail';
+
+        $generatorMock = $this->createGeneratorMock();
+        $generatorMock
+            ->expects($this->any())
+            ->method('generate')
+        ;
+
+
+        $checker = new \stdClass;
+        $checker->actualCallable = null;
+
+        $registryMock = $this->createCallbackRegistryMock();
+        $registryMock
+            ->expects($this->once())
+            ->method('set')
+            ->will($this->returnCallback(function($namespace, $function, $callable) use ($checker) {
+                $checker->actualNamespace = $namespace;
+                $checker->actualFunction = $function;
+                $checker->actualCallable = $callable;
+            }))
+        ;
+
+        $facade = new Fumocker($generatorMock, $registryMock);
+
+        $functionMock = $facade->getMock($namespace, $function);
+
+        $this->assertEquals($namespace, $checker->actualNamespace);
+        $this->assertEquals($function, $checker->actualFunction);
+        $this->assertSame(array($functionMock, $function), $checker->actualCallable);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCleanupAllMockedFunctionBySettingGlobalFunctionAsCallable()
     {
         $firstNamespace = 'Foo';
         $firstFunctionName = 'mail';
@@ -178,6 +234,62 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $facade = new Fumocker($generatorMock, $registryMock);
+
+        $facade->cleanup();
+    }
+
+    /**
+     * @test
+     *
+     * @depends shouldReturnPhpunitMockObjectWithMethodNamedAsGivenFunction
+     *
+     * @expectedException PHPUnit_Framework_ExpectationFailedException
+     * @expectedExceptionMessage Method was expected to be called 1 times, actually called 0 times.
+     */
+    public function shouldVerifyFunctionMockThatItCalledOneTimeWhenInRealNeverCalled()
+    {
+        $registryMock = $this->createCallbackRegistryMock();
+        $registryMock
+            ->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue(array()))
+        ;
+
+        $facade = new Fumocker($this->createGeneratorMock(), $registryMock);
+
+        $functionMock = $facade->getMock('Bar', 'mail');
+
+        $functionMock->expects($this->once())->method('mail');
+
+        $facade->cleanup();
+    }
+
+    /**
+     * @test
+     *
+     * @depends shouldReturnPhpunitMockObjectWithMethodNamedAsGivenFunction
+     * @depends shouldVerifyFunctionMockThatItCalledOneTimeWhenInRealNeverCalled
+     */
+    public function shouldNotVerifyFunctionMockTwice()
+    {
+        $registryMock = $this->createCallbackRegistryMock();
+        $registryMock
+            ->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue(array()))
+        ;
+
+        $facade = new Fumocker($this->createGeneratorMock(), $registryMock);
+
+        $functionMock = $facade->getMock('Bar', 'mail');
+
+        $functionMock->expects($this->once())->method('mail');
+
+        try {
+            $facade->cleanup();
+
+            $this->fail('Cleanup should throw verify exception');
+        } catch (\PHPUnit_Framework_ExpectationFailedException $e) { }
 
         $facade->cleanup();
     }

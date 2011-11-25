@@ -14,6 +14,11 @@ class Fumocker
     protected $registry;
 
     /**
+     * @var array
+     */
+    protected $mocks = array();
+
+    /**
      * @param MockGenerator $generator
      */
     public function __construct(MockGenerator $generator = null, CallbackRegistry $registry = null)
@@ -31,8 +36,14 @@ class Fumocker
      *
      * @return PHPUnit_Framework_MockObject_MockObject
      */
-    public function getMock($namespace, $function, $callable)
+    public function getMock($namespace, $function)
     {
+        if (false == \class_exists('PHPUnit_Framework_MockObject_Generator', true)) {
+            throw new \RuntimeException(
+                'PHPUnit_Framework_MockObject_Generator class not found. In order to use this library install PHPUnit_Framework_MockObject library.'
+            );
+        }
+
         if (false == \function_exists($function)) {
             throw new \InvalidArgumentException(\sprintf(
                 'The global function with name `%s` does not exist.',
@@ -44,19 +55,26 @@ class Fumocker
             $this->generator->generate($namespace, $function);
         }
 
-        $this->registry->set($namespace, $function, $callable);
+        $this->mocks[] = $functionMock = \PHPUnit_Framework_MockObject_Generator::getMock('stdClass', array($function));
+
+        $this->registry->set($namespace, $function, array($functionMock, $function));
+
+        return $functionMock;
     }
 
     /**
-     * This function sets a function in global namespace as a callable for all mocked functions
-     * Can be used to revert all changes
-     *
      * @return void
      */
     public function cleanup()
     {
         foreach ($this->registry->getAll() as $data) {
             $this->registry->set($data['namespace'], $data['function'], $data['function']);
+        }
+
+        $mocks = $this->mocks;
+        $this->mocks = array();
+        foreach ($mocks as $mock) {
+            $mock->__phpunit_verify();
         }
     }
 }

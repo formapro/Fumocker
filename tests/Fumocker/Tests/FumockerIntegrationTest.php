@@ -25,7 +25,7 @@ class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldMockRangeFunctionAndUseItsMock()
     {
-        $functionMock = $this->getFunctionMock(__NAMESPACE__, 'range');
+        $functionMock = $this->fumocker->getMock(__NAMESPACE__, 'range');
         $functionMock
             ->expects($this->once())
             ->method('range')
@@ -44,17 +44,8 @@ class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSetGlobalFunctionAsCallable()
+    public function shouldCleanupAndUseGlobalFunctionAsCallable()
     {
         $this->assertEquals(array(4, 5), range(4, 5));
-    }
-
-    public function getFunctionMock($namespace, $function)
-    {
-        $mock = $this->getMock('\stdClass', array($function));
-
-        $this->fumocker->getMock($namespace, $function, array($mock, $function));
-
-        return $mock;
     }
 }
