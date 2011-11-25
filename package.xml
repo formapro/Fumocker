@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package
+    packagerversion="1.4.6"
+    version="2.0"
+    xmlns="http://pear.php.net/dtd/package-2.0"
+    xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd"
+>
+    <name>Fumocker</name>
+    <channel>pear.forma-dev.com</channel>
+    <summary>A php function mocker.</summary>
+    <description>A php function mocker.</description>
+    <lead>
+        <name>Kotlay Maksim</name>
+        <user>makasim</user>
+        <email>kotlyar.maksim@gmail.com</email>
+        <active>yes</active>
+    </lead>
+    <date>2011-11-28</date>
+    <version>
+        <release>1.0.0</release>
+        <api>1.0.0</api>
+    </version>
+    <stability>
+        <release>stable</release>
+        <api>stable</api>
+    </stability>
+    <license>MIT</license>
+    <notes>https://github.com/formapro/Fumocker/blob/master/README.markdown</notes>
+    <contents>
+        <dir name="/">
+            <dir name="Fumocker" baseinstalldir="/">
+                <file name="Fumocker.php" role="php" />
+                <file name="CallbackRegistry.php" role="php" />
+                <file name="MockGenerator.php" role="php" />
+            </dir>
+            <file name="LICENSE" role="doc"/>
+            <file name="README.markdown" role="doc"/>
+            <file name="autoload.php" role="php"/>
+        </dir>
+    </contents>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.3.2</min>
+            </php>
+            <pearinstaller>
+                <min>1.9.4</min>
+            </pearinstaller>
+        </required>
+    </dependencies>
+    <phprelease />
+</package>
