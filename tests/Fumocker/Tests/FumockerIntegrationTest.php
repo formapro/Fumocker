@@ -2,24 +2,22 @@
 namespace Fumocker\Tests;
 
 use Fumocker\Fumocker;
-use Fumocker\MockGenerator;
-use Fumocker\CallbackRegistry;
 
 class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Fumocker\Fumocker
      */
-    protected static $fumocker;
+    protected $fumocker;
 
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        self::$fumocker = new Fumocker(new MockGenerator(), CallbackRegistry::getInstance());
+        $this->fumocker = new Fumocker();
     }
 
     public function tearDown()
     {
-        self::$fumocker->setGlobals();
+        $this->fumocker->setGlobals();
     }
 
     /**
@@ -55,7 +53,7 @@ class FumockerIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->getMock('\stdClass', array($function));
 
-        self::$fumocker->set($namespace, $function, array($mock, $function));
+        $this->fumocker->set($namespace, $function, array($mock, $function));
 
         return $mock;
     }

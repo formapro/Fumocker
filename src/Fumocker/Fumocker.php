@@ -16,10 +16,10 @@ class Fumocker
     /**
      * @param MockGenerator $generator
      */
-    public function __construct(MockGenerator $generator, CallbackRegistry $registry)
+    public function __construct(MockGenerator $generator = null, CallbackRegistry $registry = null)
     {
-        $this->generator = $generator;
-        $this->registry = $registry;
+        $this->generator = $generator ?: new MockGenerator();
+        $this->registry = $registry ?: CallbackRegistry::getInstance();
     }
 
     /**

@@ -9,12 +9,26 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldRequiredGeneratorAndRegistrySetInConstructor()
+    public function shouldAcceptOptionalGeneratorAndCallbackRegistryInConstructor()
     {
-        new Fumocker(
-            $this->createGeneratorMock(),
-            $this->createCallbackRegistryMock()
-        );
+        $expectedGenerator = $this->createGeneratorMock();
+        $expectedRegistry = $this->createCallbackRegistryMock();
+
+        $facade = new Fumocker($expectedGenerator, $expectedRegistry);
+
+        $this->assertAttributeSame($expectedGenerator, 'generator', $facade);
+        $this->assertAttributeSame($expectedRegistry, 'registry', $facade);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateGeneratorAndCallbackRegistryInConstructorIfNotProvided()
+    {
+        $facade = new Fumocker();
+
+        $this->assertAttributeInstanceOf('Fumocker\MockGenerator', 'generator', $facade);
+        $this->assertAttributeInstanceOf('Fumocker\CallbackRegistry', 'registry', $facade);
     }
 
     /**
