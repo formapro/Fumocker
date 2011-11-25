@@ -40,8 +40,8 @@ class Fumocker
             ));
         }
 
-        if (false == $this->generator->hasGenerated($function, $namespace)) {
-            $this->generator->generate($function, $namespace);
+        if (false == $this->generator->hasGenerated($namespace, $function)) {
+            $this->generator->generate($namespace, $function);
         }
 
         $this->registry->set($namespace, $function, $callable);

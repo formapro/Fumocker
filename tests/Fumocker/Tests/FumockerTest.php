@@ -47,8 +47,8 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('generate')
             ->with(
-                $this->equalTo($functionName),
-                $this->equalTo($namespace)
+                $this->equalTo($namespace),
+                $this->equalTo($functionName)
             )
         ;
         $generatorMock
