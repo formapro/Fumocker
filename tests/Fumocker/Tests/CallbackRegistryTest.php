@@ -10,12 +10,12 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $reflectionClass = new \ReflectionClass('Fumocker\CallbackRegistry');
-        $reflectionProperty = $reflectionClass->getProperty('instance');
+        self::unsetCallbackRegistrySingleton();
+    }
 
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($reflectionClass, null);
-        $reflectionProperty->setAccessible(false);
+    public static function tearDownAfterClass()
+    {
+        self::unsetCallbackRegistrySingleton();
     }
 
     /**
@@ -185,6 +185,16 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
             'callable' => $expectedCallableBar
         );
         $this->assertEquals($expectedSecondCallable, $callables[1]);
+    }
+
+    protected static function unsetCallbackRegistrySingleton()
+    {
+        $reflectionClass = new \ReflectionClass('Fumocker\CallbackRegistry');
+        $reflectionProperty = $reflectionClass->getProperty('instance');
+
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($reflectionClass, null);
+        $reflectionProperty->setAccessible(false);
     }
 
     /**
