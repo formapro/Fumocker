@@ -12,7 +12,7 @@ class CallbackRegistry
     /**
      * @var array
      */
-    protected $callables;
+    protected $callables = array();
 
     protected function __construct()
     {
@@ -50,7 +50,11 @@ class CallbackRegistry
             throw new \InvalidArgumentException('Invalid callable provided');
         }
 
-        $this->callables["$namespace\\$functionName"] = $callable;
+        $this->callables["$namespace\\$functionName"] = array(
+            'namespace' => $namespace,
+            'function' => $functionName,
+            'callable' => $callable,
+        );
     }
 
     /**
@@ -70,7 +74,12 @@ class CallbackRegistry
             ));
         }
 
-        return $this->callables["$namespace\\$functionName"];
+        return $this->callables["$namespace\\$functionName"]['callable'];
+    }
+
+    public function getAll()
+    {
+        return array_values($this->callables);
     }
 
     /**

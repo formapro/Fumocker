@@ -147,6 +147,47 @@ class CallbackRegistryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldAllowToGetAllDefinedCallables()
+    {
+        $expectedCallableFoo = function() {};
+        $expectedNamespaceFoo = 'namespace\\foo';
+        $expectedFunctionFoo = 'functionNameFoo';
+
+        $expectedCallableBar = function() {};
+        $expectedNamespaceBar = 'namespace\\bar';
+        $expectedFunctionBar = 'functionNameBar';
+
+        $registry = CallbackRegistry::getInstance();
+
+        $registry->set($expectedNamespaceFoo, $expectedFunctionFoo, $expectedCallableFoo);
+        $registry->set($expectedNamespaceBar, $expectedFunctionBar, $expectedCallableBar);
+
+        $callables = $registry->getAll();
+
+        $this->assertInternalType('array', $callables);
+        $this->assertEquals(2, count($callables));
+
+        $this->assertInternalType('array', $callables[0]);
+        $this->assertInternalType('array', $callables[1]);
+
+        $expectedFirstCallable = array(
+            'namespace' => $expectedNamespaceFoo,
+            'function' => $expectedFunctionFoo,
+            'callable' => $expectedCallableFoo
+        );
+        $this->assertEquals($expectedFirstCallable, $callables[0]);
+
+        $expectedSecondCallable = array(
+            'namespace' => $expectedNamespaceBar,
+            'function' => $expectedFunctionBar,
+            'callable' => $expectedCallableBar
+        );
+        $this->assertEquals($expectedSecondCallable, $callables[1]);
+    }
+
+    /**
      * @static
      *
      * @return array
