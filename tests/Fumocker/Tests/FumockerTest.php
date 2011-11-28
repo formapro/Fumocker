@@ -14,10 +14,10 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
         $expectedGenerator = $this->createGeneratorMock();
         $expectedRegistry = $this->createCallbackRegistryMock();
 
-        $facade = new Fumocker($expectedGenerator, $expectedRegistry);
+        $fumocker = new Fumocker($expectedGenerator, $expectedRegistry);
 
-        $this->assertAttributeSame($expectedGenerator, 'generator', $facade);
-        $this->assertAttributeSame($expectedRegistry, 'registry', $facade);
+        $this->assertAttributeSame($expectedGenerator, 'generator', $fumocker);
+        $this->assertAttributeSame($expectedRegistry, 'registry', $fumocker);
     }
 
     /**
@@ -25,10 +25,10 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldCreateGeneratorAndCallbackRegistryInConstructorIfNotProvided()
     {
-        $facade = new Fumocker();
+        $fumocker = new Fumocker();
 
-        $this->assertAttributeInstanceOf('Fumocker\MockGenerator', 'generator', $facade);
-        $this->assertAttributeInstanceOf('Fumocker\CallbackRegistry', 'registry', $facade);
+        $this->assertAttributeInstanceOf('Fumocker\MockGenerator', 'generator', $fumocker);
+        $this->assertAttributeInstanceOf('Fumocker\CallbackRegistry', 'registry', $fumocker);
     }
 
     /**
@@ -39,12 +39,12 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
      */
     public function throwWhileGettingMockOfNotExistGlobalFunction()
     {
-        $facade = new Fumocker(
+        $fumocker = new Fumocker(
             $this->createGeneratorMock(),
             $this->createCallbackRegistryMock()
         );
 
-        $facade->getMock('Bar', 'foo');
+        $fumocker->getMock('Bar', 'foo');
     }
 
     /**
@@ -67,9 +67,9 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
         ;
 
-        $facade = new Fumocker($generatorMock, $registryMock);
+        $fumocker = new Fumocker($generatorMock, $registryMock);
 
-        $functionMockObject = $facade->getMock($namespace, $function);
+        $functionMockObject = $fumocker->getMock($namespace, $function);
 
         $this->assertInstanceOf('PHPUnit_Framework_MockObject_MockObject', $functionMockObject);
         $this->assertTrue(method_exists($functionMockObject, $function));
@@ -104,9 +104,9 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
         ;
 
-        $facade = new Fumocker($generatorMock, $registryMock);
+        $fumocker = new Fumocker($generatorMock, $registryMock);
 
-        $facade->getMock($namespace, $function);
+        $fumocker->getMock($namespace, $function);
     }
 
     /**
@@ -134,9 +134,9 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
         ;
 
-        $facade = new Fumocker($generatorMock, $registryMock);
+        $fumocker = new Fumocker($generatorMock, $registryMock);
 
-        $facade->getMock($namespace, $function);
+        $fumocker->getMock($namespace, $function);
     }
 
     /**
@@ -168,9 +168,9 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             }))
         ;
 
-        $facade = new Fumocker($generatorMock, $registryMock);
+        $fumocker = new Fumocker($generatorMock, $registryMock);
 
-        $functionMock = $facade->getMock($namespace, $function);
+        $functionMock = $fumocker->getMock($namespace, $function);
 
         $this->assertEquals($namespace, $checker->actualNamespace);
         $this->assertEquals($function, $checker->actualFunction);
@@ -233,9 +233,9 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        $facade = new Fumocker($generatorMock, $registryMock);
+        $fumocker = new Fumocker($generatorMock, $registryMock);
 
-        $facade->cleanup();
+        $fumocker->cleanup();
     }
 
     /**
@@ -255,13 +255,13 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()))
         ;
 
-        $facade = new Fumocker($this->createGeneratorMock(), $registryMock);
+        $fumocker = new Fumocker($this->createGeneratorMock(), $registryMock);
 
-        $functionMock = $facade->getMock('Bar', 'mail');
+        $functionMock = $fumocker->getMock('Bar', 'mail');
 
         $functionMock->expects($this->once())->method('mail');
 
-        $facade->cleanup();
+        $fumocker->cleanup();
     }
 
     /**
@@ -279,19 +279,19 @@ class FumockerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array()))
         ;
 
-        $facade = new Fumocker($this->createGeneratorMock(), $registryMock);
+        $fumocker = new Fumocker($this->createGeneratorMock(), $registryMock);
 
-        $functionMock = $facade->getMock('Bar', 'mail');
+        $functionMock = $fumocker->getMock('Bar', 'mail');
 
         $functionMock->expects($this->once())->method('mail');
 
         try {
-            $facade->cleanup();
+            $fumocker->cleanup();
 
             $this->fail('Cleanup should throw verify exception');
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) { }
 
-        $facade->cleanup();
+        $fumocker->cleanup();
     }
 
     /**
