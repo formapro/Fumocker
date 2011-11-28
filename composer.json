@@ -17,8 +17,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "symfony/class-loader": "2.0.*"
+        "php": ">=5.3.2"
     },
     "autoload": {
         "psr-0": { "Fumocker\\Tests": "tests/", "Fumocker": "src/" }
