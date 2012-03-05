@@ -4,7 +4,6 @@
     "description": "A php function mocker",
     "keywords": ["unit test", "function mock", "phpunit"],
     "homepage": "http://github.com/formapro/Fumocker",
-    "version": "1.0.0",
     "license": "MIT",
     "authors": [
         {
