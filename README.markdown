@@ -27,13 +27,13 @@ class FooTestCase extends \PHPUnit_Framework_TestCase
         /**
          * @var $mock \PHPUnit_Framework_MockObject_MockObject
          */
-        $mock = $this->fumocker->getMock('Namespace/Where/Tested/Class/Is', 'mail');
+        $mock = $this->fumocker->getMock('Namespace\Where\Tested\Class\Is', 'mail');
         $mock
             ->expects($this->never())
             ->method('mail')
         ;
 
-        //test your Namespace/Where/Tested/Class/Is/Foo
+        //test your Namespace\Where\Tested\Class\Is\Foo
     }
 
 
@@ -44,7 +44,7 @@ class FooTestCase extends \PHPUnit_Framework_TestCase
         /**
          * @var $mock \PHPUnit_Framework_MockObject_MockObject
          */
-        $mock = $this->fumocker->getMock('Namespace/Where/Tested/Class/Is', 'mail');
+        $mock = $this->fumocker->getMock('Namespace\Where\Tested\Class\Is', 'mail');
         $mock
             ->expects($this->once())
             ->method('mail')
@@ -54,7 +54,7 @@ class FooTestCase extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        //test your Namespace/Where/Tested/Class/Is/Foo
+        //test your Namespace\Where\Tested\Class\Is\Foo
     }
 
 
