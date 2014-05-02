@@ -55,7 +55,8 @@ class Fumocker
             $this->generator->generate($namespace, $function);
         }
 
-        $this->mocks[] = $functionMock = \PHPUnit_Framework_MockObject_Generator::getMock('stdClass', array($function));
+        $generator = new \PHPUnit_Framework_MockObject_Generator;
+        $this->mocks[] = $functionMock = $generator->getMock('stdClass', array($function));
 
         $this->registry->set($namespace, $function, array($functionMock, $function));
 
