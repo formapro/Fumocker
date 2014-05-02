@@ -1,6 +1,9 @@
 <?php
 namespace Fumocker;
 
+/**
+ *
+ */
 class Fumocker
 {
     /**
@@ -19,7 +22,8 @@ class Fumocker
     protected $mocks = array();
 
     /**
-     * @param MockGenerator $generator
+     * @param MockGenerator    $generator
+     * @param CallbackRegistry $registry
      */
     public function __construct(MockGenerator $generator = null, CallbackRegistry $registry = null)
     {
@@ -30,11 +34,11 @@ class Fumocker
     /**
      * @param string $namespace
      * @param string $function
-     * @param callable $callable
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException if function does not exist in global namespace
      *
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     public function getMock($namespace, $function)
     {
@@ -55,7 +59,8 @@ class Fumocker
             $this->generator->generate($namespace, $function);
         }
 
-        $this->mocks[] = $functionMock = \PHPUnit_Framework_MockObject_Generator::getMock('stdClass', array($function));
+        $generator = new \PHPUnit_Framework_MockObject_Generator;
+        $this->mocks[] = $functionMock = $generator->getMock('stdClass', array($function));
 
         $this->registry->set($namespace, $function, array($functionMock, $function));
 

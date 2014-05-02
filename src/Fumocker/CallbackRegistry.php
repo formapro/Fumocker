@@ -2,6 +2,9 @@
 
 namespace Fumocker;
 
+/**
+ *
+ */
 class CallbackRegistry
 {
     /**
@@ -14,6 +17,9 @@ class CallbackRegistry
      */
     protected $callables = array();
 
+    /**
+     *
+     */
     protected function __construct()
     {
         $this->callables = array();
@@ -77,14 +83,15 @@ class CallbackRegistry
         return $this->callables["$namespace\\$functionName"]['callable'];
     }
 
+    /**
+     * @return array
+     */
     public function getAll()
     {
         return array_values($this->callables);
     }
 
     /**
-     * @static
-     *
      * @return CallbackRegistry
      */
     public static function getInstance()

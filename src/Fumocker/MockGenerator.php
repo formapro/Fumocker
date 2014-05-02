@@ -1,6 +1,9 @@
 <?php
 namespace Fumocker;
 
+/**
+ *
+ */
 class MockGenerator
 {
     /**
@@ -110,7 +113,8 @@ function {$functionName}()
     }
 
     /**
-     * @param Proxy $proxy
+     * @param string $namespace
+     * @param string $functionName
      *
      * @return bool
      */
@@ -120,7 +124,7 @@ function {$functionName}()
     }
 
     /**
-     * @param Proxy $proxy
+     * @param string $functionName
      *
      * @return string
      */
